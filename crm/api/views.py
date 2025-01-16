@@ -30,6 +30,7 @@ def login_view(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def protected_view(request):
+@permission_classes([IsAuthenticated])  
+def create_customer(request):
+    
     return Response({'message': f'Welcome, {request.user.username}!'}, status=200)
