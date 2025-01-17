@@ -7,6 +7,7 @@ from .company import company_api
 from .location import location_api
 from .tiket import ticket_api
 from .order import order_api
+from .localization import localization_api
 
 urlpatterns = [
     path("login/", login_view, name="login"),
@@ -31,4 +32,7 @@ urlpatterns = [
     # ticket
     path("order/", order_api, name="order"),
     path("order/<int:pk>/", order_api, name="order_del"),
+    # localization_api
+    path("localization_api/", localization_api, name="localization_api"),
+    path("localization_api/<int:pk>/", localization_api, name="localization_api_del"),
 ]

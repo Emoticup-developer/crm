@@ -211,13 +211,7 @@ class Product(models.Model):
     photo = models.ImageField(upload_to="products/", blank=True, null=True)
     description = models.TextField(max_length=2000, blank=True, null=True)
 
-    ACTIVE = "Active"
-    INACTIVE = "Inactive"
-    STATUS_CHOICES = [
-        (ACTIVE, "Active"),
-        (INACTIVE, "Inactive"),
-    ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=ACTIVE)
+    status = models.BooleanField(default=False,null=False,blank=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -231,10 +225,6 @@ class Product(models.Model):
 
 
 class Machine(models.Model):
-    STATUS_CHOICES = [
-        ("Available", "Available"),
-        ("Sold", "Sold"),
-    ]
     machine_id = models.CharField(max_length=30, unique=True)  # Unique machine ID
     machine_name = models.CharField(max_length=150)  # Machine title
     photo = models.ImageField(
@@ -242,13 +232,11 @@ class Machine(models.Model):
         blank=True,
         null=True,
         validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])],
-    )  # Photo with size validation
-    status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default="Available"
-    )  # Machine status
+    )
+    status = models.BooleanField(default=False,null=True,blank=True)
     attributes = models.JSONField(
         default=dict, blank=True
-    )  # Custom key-value pairs for attributes
+    ) 
 
     def __str__(self):
         return f"{self.machine_name} ({self.machine_id})"
@@ -377,3 +365,17 @@ class Order(models.Model):
         verbose_name = "Order"
         verbose_name_plural = "Orders"
 
+
+
+
+
+
+class Localization(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    description = models.CharField(max_length=250, blank=True, null=True)
+    image = models.ImageField(upload_to='item_images/', blank=True, null=True)
+    status = models.BooleanField(max_length=10, default=False)
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
