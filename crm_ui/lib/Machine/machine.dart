@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:crm_ui/component/component.dart';
 import 'package:crm_ui/homepage/homepage.dart';
 import 'package:crm_ui/server/server.dart';
 import 'package:crm_ui/variable.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,18 +19,20 @@ class _MachinePageState extends State<MachinePage> {
   bool isAddMode = false;
   bool isEditMode = false;
   int selected = 0;
-  TextEditingController product_code = TextEditingController();
-  TextEditingController product_title = TextEditingController();
-  TextEditingController moq = TextEditingController();
+  TextEditingController machine_id = TextEditingController();
+  TextEditingController machine_name = TextEditingController();
   TextEditingController description = TextEditingController();
+
+  bool status = false;
+  File? file;
+  String filepath = "";
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
-    bool status = false;
     return Scaffold(
-      appBar: AppBarForAll(),
+      appBar: AppBarForAll(context),
       drawer: DrawerForAll(),
       body: SingleChildScrollView(
         child: Column(
@@ -61,12 +63,7 @@ class _MachinePageState extends State<MachinePage> {
                       onTap: () async {
                         isAddMode = isAddMode ? false : true;
                         setState(() {});
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => MachineForm(),
-                        //   ),
-                        // );
+                      
                       },
                       leading: Icon(Icons.add_outlined),
                       title: Text("Create Machine"),
@@ -75,11 +72,115 @@ class _MachinePageState extends State<MachinePage> {
                 ],
               ),
             ),
-            AddNewMachine(
-                isAddMode: isAddMode,
-                width: width,
-                height: height,
-                status: status),
+            Visibility(
+              visible: isAddMode,
+              child: Container(
+                width: width * 0.88,
+                height: height * 0.80,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Machine ID Field
+                    TextField(
+                      controller: machine_id,
+                      decoration: InputDecoration(
+                        labelText: 'Machine ID',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+
+                    // Machine Name Field
+                    TextField(
+                      controller: machine_name,
+                      decoration: InputDecoration(
+                        labelText: 'Machine Name',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+
+                    // Attributes Field (JSON)
+                    TextField(
+                      
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        labelText: 'Attributes (JSON)',
+                        border: OutlineInputBorder(),
+                        hintText: '{"key1": "value1", "key2": "value2"}',
+                      ),
+                    ),
+                    SizedBox(height: 20),
+
+                    // Status Switch
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Radio<bool>(
+                              value: true,
+                              groupValue: isEnabled,
+                              onChanged: (value) {
+                                setState(() {
+                                  isEnabled = value!;
+                                });
+                                setState(() {});
+                              },
+                            ),
+                            Text('Enable'),
+                          ],
+                        ),
+                        SizedBox(width: 16),
+                        Row(
+                          children: [
+                            Radio<bool>(
+                              value: false,
+                              groupValue: isEnabled,
+                              onChanged: (value) {
+                                setState(() {
+                                  isEnabled = value!;
+                                  print(value);
+                                });
+                                setState(() {});
+                              },
+                            ),
+                            Text('Disable'),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+
+                    // Image Picker Button
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            file = await pickFile();
+                            filepath = file!.path.toString();
+                            setState(() {
+                              print(file!.path.toString());
+                            });
+                          },
+                          child: Text('Upload Image'),
+                        ),
+                        SizedBox(width: 10),
+                        Text(filepath.toString()),
+                      ],
+                    ),
+                    SizedBox(height: 40),
+
+                    // Submit Button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Submit'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             EditMachine(width),
             ShowAllMachine(height, width),
           ],
@@ -281,14 +382,13 @@ class _MachinePageState extends State<MachinePage> {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
-                                      product_code.text = snapshot.data![i]
+                                      machine_id.text = snapshot.data![i]
                                               ["product_code"]
                                           .toString();
 
-                                      product_title.text =
+                                      machine_name.text =
                                           snapshot.data![i]["product_title"];
-                                      moq.text =
-                                          snapshot.data![i]["moq"].toString();
+        
                                       description.text = snapshot.data![i]
                                               ["description"]
                                           .toString();
@@ -308,14 +408,13 @@ class _MachinePageState extends State<MachinePage> {
                                   ),
                                   GestureDetector(
                                     onTap: () async {
-                                      product_code.text = snapshot.data![i]
+                                      machine_id.text = snapshot.data![i]
                                               ["product_code"]
                                           .toString();
 
-                                      product_title.text =
+                                      machine_name.text =
                                           snapshot.data![i]["product_title"];
-                                      moq.text =
-                                          snapshot.data![i]["moq"].toString();
+                                    
                                       description.text = snapshot.data![i]
                                               ["description"]
                                           .toString();
@@ -400,7 +499,7 @@ class _MachinePageState extends State<MachinePage> {
 
               // Text Field 1
               TextField(
-                controller: product_code,
+                // controller: product_code,
                 decoration: InputDecoration(
                   hintText: 'Enter Product Code ',
                   filled: true,
@@ -417,7 +516,7 @@ class _MachinePageState extends State<MachinePage> {
 
               // Text Field 2
               TextField(
-                controller: product_title,
+                // controller: product_title,
                 decoration: InputDecoration(
                   hintText: 'Enter Product Title',
                   filled: true,
@@ -434,7 +533,7 @@ class _MachinePageState extends State<MachinePage> {
 
               // Text Field 3
               TextField(
-                controller: moq,
+                // controller: moq,
                 decoration: InputDecoration(
                   hintText: 'Enter MOQ',
                   filled: true,
@@ -489,15 +588,15 @@ class _MachinePageState extends State<MachinePage> {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () async {
-                    var responce =
-                        await http.post(Uri.parse("$url/api/product/"), body: {
-                      "product_code": product_code.text,
-                      "product_title": product_title.text,
-                      "description": description.text,
-                      "status": isEnabled.toString(),
-                    });
-                    print(responce.statusCode);
-                    print(responce.body);
+                    // var responce =
+                    //     await http.post(Uri.parse("$url/api/product/"), body: {
+                    //   "product_code": product_code.text,
+                    //   "product_title": product_title.text,
+                    //   "description": description.text,
+                    //   "status": isEnabled.toString(),
+                    // });
+                    // print(responce.statusCode);
+                    // print(responce.body);
                     isAddMode = false;
                     setState(() {});
                   },
@@ -509,105 +608,6 @@ class _MachinePageState extends State<MachinePage> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class AddNewMachine extends StatelessWidget {
-  const AddNewMachine({
-    super.key,
-    required this.isAddMode,
-    required this.width,
-    required this.height,
-    required this.status,
-  });
-
-  final bool isAddMode;
-  final double width;
-  final double height;
-  final bool status;
-
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: isAddMode,
-      child: Container(
-        width: width * 0.88,
-        height: height * 0.80,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Machine ID Field
-            TextField(
-              // controller: machineIdController,
-              decoration: InputDecoration(
-                labelText: 'Machine ID',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
-
-            // Machine Name Field
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Machine Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
-
-            // Attributes Field (JSON)
-            TextField(
-              // controller: attributesController,
-              maxLines: 4,
-              decoration: InputDecoration(
-                labelText: 'Attributes (JSON)',
-                border: OutlineInputBorder(),
-                hintText: '{"key1": "value1", "key2": "value2"}',
-              ),
-            ),
-            SizedBox(height: 20),
-
-            // Status Switch
-            Row(
-              children: [
-                Text('Status:'),
-                Switch(
-                  value: status,
-                  onChanged: (val) {},
-                ),
-                Text(status ? 'Enabled' : 'Disabled'),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // Image Picker Button
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Upload Image'),
-                ),
-                SizedBox(width: 10),
-                // if (selectedImageName != null)
-                //   Text(
-                //     selectedImageName,
-                //     overflow: TextOverflow.ellipsis,
-                //   ),
-              ],
-            ),
-            SizedBox(height: 40),
-
-            // Submit Button
-            Center(
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text('Submit'),
-              ),
-            ),
-          ],
         ),
       ),
     );

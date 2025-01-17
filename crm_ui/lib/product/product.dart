@@ -26,7 +26,7 @@ class _ProductPagePageState extends State<ProductPage> {
     final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBarForAll(),
+      appBar: AppBarForAll(context),
       drawer: DrawerForAll(),
       body: SingleChildScrollView(
         child: Column(

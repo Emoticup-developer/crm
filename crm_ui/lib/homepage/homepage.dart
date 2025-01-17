@@ -1,5 +1,7 @@
 import 'package:crm_ui/Machine/machine.dart';
+import 'package:crm_ui/component/component.dart';
 import 'package:crm_ui/localization/localization.dart';
+import 'package:crm_ui/login/login.dart';
 import 'package:crm_ui/product/product.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     final double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBarForAll(),
+      appBar: AppBarForAll(context),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,7 +319,7 @@ class DrawerForAll extends StatelessWidget {
   }
 }
 
-AppBar AppBarForAll() {
+AppBar AppBarForAll(BuildContext context) {
   return AppBar(
     backgroundColor: const Color.fromARGB(210, 225, 225, 225),
     elevation: 4,
@@ -382,7 +384,7 @@ AppBar AppBarForAll() {
               )
               .toList(),
           onChanged: (value) {
-            // Handle dropdown selection
+          
           },
           hint: Text(
             'Select',
@@ -422,12 +424,21 @@ AppBar AppBarForAll() {
         ),
 
         SizedBox(width: 16),
-
-        // Profile Icon
-        CircleAvatar(
-          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-          radius: 18,
-          child: Icon(Icons.person, color: Colors.grey[300]),
+        GestureDetector(
+          onTap: () async {
+            await logout();
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LoginPage(),
+              ),
+            );
+          },
+          child: CircleAvatar(
+            backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+            radius: 18,
+            child: Icon(Icons.person, color: Colors.grey[300]),
+          ),
         ),
       ],
     ),
