@@ -1,0 +1,76 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}View Ratting{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}"
+        class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="{% url 'ticket_update' id=ticket.id %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+<section class="w-full  p-4 rounded-xl shadow-xl">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-gray-800">Ticket #{{ ticket.ticket_id }} - {{ ticket.subject }}</h2>
+        <span class="text-sm font-medium text-gray-600">{{ ticket.created_at|date:"F j, Y, g:i a" }}</span>
+    </div>
+
+    <!-- Ticket Details -->
+    <div class="mt-4 grid grid-cols-1 gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+        {% if ticket.type %}
+        <p><strong>Ticket Type:</strong> {{ ticket.type.name }}</p>
+        {% endif %}
+        {% if ticket.source %}
+        <p><strong>Source:</strong> {{ ticket.source.name }}</p>
+        {% endif %}
+        <p><strong>Client:</strong> {{ ticket.client.full_name }}</p>
+        <p><strong>Handled By:</strong> {{ ticket.handled_by.full_name }}</p>
+        <p><strong>Notifications:</strong> {% if ticket.email_sms_notification %} Enabled {% else %} Disabled {% endif %}</p>
+        {% if ticket.office %}
+        <p><strong>Office:</strong> {{ ticket.office.company_name }}</p>
+        {% endif %}
+        {% if ticket.machine %}
+        <p><strong>Machine:</strong> {{ ticket.machine.machine_name }}</p>
+        {% endif %}
+        <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+        {% if ticket.additional_information %}
+        <p><strong>Additional Information:</strong> {{ ticket.additional_information }}</p>
+        {% else %}
+        <p class="italic text-gray-500">No additional information provided.</p>
+        {% endif %}
+    </div>
+
+    <!-- Media -->
+    <div class="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+        {% if ticket.photo %}
+        <p><strong>Attached Photo:</strong></p>
+        <img src="{{ ticket.photo.url }}" alt="Ticket Photo" class="w-full max-h-64 object-contain rounded-lg">
+        {% endif %}
+        {% if ticket.video %}
+        <p><strong>Attached Video:</strong></p>
+        <video controls class="w-full max-h-64 rounded-lg">
+            <source src="{{ ticket.video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <div class="text-xs text-gray-500 mt-4">
+        <span><strong>Last Updated:</strong> {{ ticket.updated_at|date:"F j, Y, g:i a" }}</span>
+    </div>
+</section>
+
+
+
+{% endblock content %}

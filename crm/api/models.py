@@ -7,6 +7,7 @@ from django.core.validators import (
     MinLengthValidator,
     FileExtensionValidator,
 )
+import uuid
 
 
 class Company(models.Model):
@@ -61,6 +62,8 @@ class Company(models.Model):
     )  # Brand Icon (Favicon)
 
     enrollment_date = models.DateField(auto_now=True)  # Company Enrollment Date
+    
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.company_name
@@ -83,6 +86,7 @@ class Location(models.Model):
     country = models.CharField(max_length=100, blank=True, null=True)
     pincode = models.CharField(max_length=6, blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=ACTIVE)
+    created_at = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
@@ -118,6 +122,7 @@ class Client(models.Model):
     account_id = models.CharField(
         max_length=30,
         unique=True,
+        default=uuid.uuid4,
         verbose_name="Account ID",
         help_text="Unique identifier, max 30 characters.",
     )
@@ -199,6 +204,8 @@ class Client(models.Model):
         verbose_name="Email/SMS Notification",
         help_text="Check to send a notification to the client via email/SMS.",
     )
+    
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.full_name} ({self.username})"
@@ -213,7 +220,7 @@ class Product(models.Model):
 
     status = models.BooleanField(default=False,null=False,blank=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -235,8 +242,9 @@ class Machine(models.Model):
     )
     status = models.BooleanField(default=False,null=True,blank=True)
     attributes = models.JSONField(
-        default=dict, blank=True
+        default=dict, blank=True ,null=True
     ) 
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.machine_name} ({self.machine_id})"
@@ -249,7 +257,7 @@ class Machine(models.Model):
 class TicketType(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=100)
-    
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -258,6 +266,7 @@ class TicketType(models.Model):
 class TicketSource(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=100)
+    created_at = models.DateTimeField(auto_now=True)
     
 
     def __str__(self):
@@ -267,23 +276,20 @@ class TicketSource(models.Model):
 class TicketPriority(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=100)
-
+    created_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.name
 
 
 class Ticket(models.Model):
-
-    ticket_id = models.CharField(max_length=30, unique=True, editable=False)
+    ticket_id = models.CharField(max_length=30, unique=True, editable=False, default=uuid.uuid1,)
     type = models.ForeignKey(
         TicketType, on_delete=models.SET_NULL, null=True, blank=True
     )
     source = models.ForeignKey(
         TicketSource, on_delete=models.SET_NULL, null=True, blank=True
     )
-    source = models.ForeignKey(
-        TicketPriority, on_delete=models.SET_NULL, null=True, blank=True
-    )
+
 
     client = models.ForeignKey(
         "Client", on_delete=models.CASCADE, related_name="raised"
@@ -302,11 +308,12 @@ class Ticket(models.Model):
     additional_information = models.TextField(blank=True, null=True)
     photo = models.ImageField(upload_to="ticket_photos/", blank=True, null=True)
     video = models.FileField(upload_to="ticket_videos/", blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    created_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return f"Ticket {self.ticket_id} - {self.subject}"
+    
+
 
     class Meta:
         verbose_name = "Ticket"
@@ -315,10 +322,25 @@ class Ticket(models.Model):
 
 
 
+class TopBarIcon(models.Model):
+    title = models.TextField(blank=False,null=False)
+    icon = models.ImageField(upload_to="icon/",blank=False,null=False)
+    date = models.DateTimeField(auto_now=True)
+    link = models.URLField(blank=False,null=False)
+    
+    def __str__(self):
+        return str(self.title)
 
 
 
-
+class SideBarIcon(models.Model):
+    title = models.TextField(blank=False,null=False)
+    icon = models.ImageField(upload_to="icon/",blank=False,null=False)
+    date = models.DateTimeField(auto_now=True)
+    link = models.URLField(blank=False,null=False)
+    
+    def __str__(self):
+        return str(self.title)
 
 
 
@@ -335,7 +357,7 @@ class OrderSource(models.Model):
 
 # Main Order Model
 class Order(models.Model):
-    order_id = models.CharField(max_length=30, unique=True, editable=False)
+    order_id = models.CharField(max_length=36, unique=True, editable=False, default=uuid.uuid4)   
     order_date = models.DateField(auto_now=True)
     source = models.ForeignKey(OrderSource, on_delete=models.SET_NULL, null=True, blank=True)
     po_number = models.CharField(max_length=100, blank=True, null=True)
@@ -379,3 +401,20 @@ class Localization(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+class Rating(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='ratings')
+    rating = models.PositiveIntegerField(
+        choices=[(i, str(i)) for i in range(1, 6)],  # Ratings from 1 to 5
+        verbose_name="Rating (1-5)"
+    )
+    comments = models.TextField(null=True, blank=True, verbose_name="Comments")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Rating for {self.client.name} - {self.rating}"
+
+    class Meta:
+        ordering = ['-created_at']

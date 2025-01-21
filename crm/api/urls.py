@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login_view
+from .views import login_view, model_counts, ticket_meta
 from .client import client_api, reset_password
 from .product import product_api
 from .machine import machine_api
@@ -35,4 +35,8 @@ urlpatterns = [
     # localization_api
     path("localization_api/", localization_api, name="localization_api"),
     path("localization_api/<int:pk>/", localization_api, name="localization_api_del"),
+    # dashboard
+    path("model_counts/", model_counts, name="model_counts"),
+    # ticket_meta
+    path("ticket_meta", ticket_meta, name="ticket_meta"),
 ]

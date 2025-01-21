@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:crm_ui/component/component.dart';
 import 'package:crm_ui/homepage/homepage.dart';
 import 'package:crm_ui/server/server.dart';
 import 'package:crm_ui/variable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,11 +23,81 @@ class _MachinePageState extends State<MachinePage> {
   int selected = 0;
   TextEditingController machine_id = TextEditingController();
   TextEditingController machine_name = TextEditingController();
+  TextEditingController attributes = TextEditingController();
   TextEditingController description = TextEditingController();
 
   bool status = false;
   File? file;
   String filepath = "";
+  String filepathonline = "";
+
+  Future<void> uploadMachineData(String filepath, String machine_id,
+      String machine_name, String attributes, String status) async {
+    var request = http.MultipartRequest('POST', Uri.parse("$url/api/machine/"));
+
+    var file = await http.MultipartFile.fromPath('photo', filepath);
+
+    request.fields["machine_id"] = machine_id;
+    request.fields["machine_name"] = machine_name;
+    request.fields["attributes"] = attributes;
+    request.fields["status"] = status;
+
+    request.files.add(file);
+
+    try {
+      var response = await request.send();
+
+      print('Status code: ${response.statusCode}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var responseBody = await response.stream.bytesToString();
+        var jsonResponse = jsonDecode(responseBody);
+        print('Response body: $jsonResponse');
+
+        isAddMode = false;
+        setState(() {});
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> UpdatedMachineData(String filepath, String machine_id,
+      String machine_name, String attributes, String status) async {
+    var request =
+        http.MultipartRequest('PUT', Uri.parse("$url/api/machine/$selected/"));
+
+    var file = await http.MultipartFile.fromPath('photo', filepath);
+
+    request.fields["machine_id"] = machine_id;
+    request.fields["machine_name"] = machine_name;
+    // request.fields["attributes"] = attributes;
+    request.fields["status"] = status;
+
+    request.files.add(file);
+
+    try {
+      var response = await request.send();
+
+      print('Status code: ${response.statusCode}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var responseBody = await response.stream.bytesToString();
+        var jsonResponse = jsonDecode(responseBody);
+        print('Response body: $jsonResponse');
+
+        isAddMode = false;
+        setState(() {});
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -63,7 +135,6 @@ class _MachinePageState extends State<MachinePage> {
                       onTap: () async {
                         isAddMode = isAddMode ? false : true;
                         setState(() {});
-                      
                       },
                       leading: Icon(Icons.add_outlined),
                       title: Text("Create Machine"),
@@ -72,117 +143,278 @@ class _MachinePageState extends State<MachinePage> {
                 ],
               ),
             ),
-            Visibility(
-              visible: isAddMode,
-              child: Container(
-                width: width * 0.88,
-                height: height * 0.80,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            AddNewMachine(width, height, context),
+            EditMachieMachine(width, height, context, filepathonline),
+            ShowAllMachine(height, width),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Visibility EditMachieMachine(double width, double height,
+      BuildContext context, String filepathonline) {
+    return Visibility(
+      visible: isEditMode,
+      child: Container(
+        width: width * 0.88,
+        height: height * 0.80,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Machine ID Field
+            TextField(
+              enabled: false,
+              controller: machine_id,
+              decoration: InputDecoration(
+                labelText: 'Machine ID',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Machine Name Field
+            TextField(
+              controller: machine_name,
+              decoration: InputDecoration(
+                labelText: 'Machine Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Attributes Field (JSON)
+
+            // SafeArea(
+            //   child: Container(
+            //     width: width * 0.60,
+            //     height: height * 0.30,
+            //     child: JsonEditor(
+            //       onChanged: (value) {
+            //         attributes.text = value;
+            //       },
+            //       json: jsonEncode(attributes.text),
+            //     ),
+            //   ),
+            // ),
+
+            TextField(
+              controller: attributes,
+              maxLines: 4,
+              decoration: InputDecoration(
+                labelText: 'Attributes (JSON)',
+                border: OutlineInputBorder(),
+                hintText: '{"key1": "value1", "key2": "value2"}',
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Status Switch
+            Row(
+              children: [
+                Row(
                   children: [
-                    // Machine ID Field
-                    TextField(
-                      controller: machine_id,
-                      decoration: InputDecoration(
-                        labelText: 'Machine ID',
-                        border: OutlineInputBorder(),
-                      ),
+                    Radio<bool>(
+                      value: true,
+                      groupValue: isEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          isEnabled = value!;
+                        });
+                        setState(() {});
+                      },
                     ),
-                    SizedBox(height: 20),
-
-                    // Machine Name Field
-                    TextField(
-                      controller: machine_name,
-                      decoration: InputDecoration(
-                        labelText: 'Machine Name',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-
-                    // Attributes Field (JSON)
-                    TextField(
-                      
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        labelText: 'Attributes (JSON)',
-                        border: OutlineInputBorder(),
-                        hintText: '{"key1": "value1", "key2": "value2"}',
-                      ),
-                    ),
-                    SizedBox(height: 20),
-
-                    // Status Switch
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            Radio<bool>(
-                              value: true,
-                              groupValue: isEnabled,
-                              onChanged: (value) {
-                                setState(() {
-                                  isEnabled = value!;
-                                });
-                                setState(() {});
-                              },
-                            ),
-                            Text('Enable'),
-                          ],
-                        ),
-                        SizedBox(width: 16),
-                        Row(
-                          children: [
-                            Radio<bool>(
-                              value: false,
-                              groupValue: isEnabled,
-                              onChanged: (value) {
-                                setState(() {
-                                  isEnabled = value!;
-                                  print(value);
-                                });
-                                setState(() {});
-                              },
-                            ),
-                            Text('Disable'),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-
-                    // Image Picker Button
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            file = await pickFile();
-                            filepath = file!.path.toString();
-                            setState(() {
-                              print(file!.path.toString());
-                            });
-                          },
-                          child: Text('Upload Image'),
-                        ),
-                        SizedBox(width: 10),
-                        Text(filepath.toString()),
-                      ],
-                    ),
-                    SizedBox(height: 40),
-
-                    // Submit Button
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Submit'),
-                      ),
-                    ),
+                    Text('Enable'),
                   ],
+                ),
+                SizedBox(width: 16),
+                Row(
+                  children: [
+                    Radio<bool>(
+                      value: false,
+                      groupValue: isEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          isEnabled = value!;
+                          print(value);
+                        });
+                        setState(() {});
+                      },
+                    ),
+                    Text('Disable'),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+
+            // Image Picker Button
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    file = await pickFile();
+                    filepath = file!.path.toString();
+                    setState(() {
+                      print(file!.path.toString());
+                    });
+                  },
+                  child: Text('Upload Image'),
+                ),
+                SizedBox(width: 10),
+                Text(filepath.toString()),
+              ],
+            ),
+            SizedBox(height: 40),
+            SafeArea(
+              child: Container(
+                width: width * 0.10,
+                height: height * 0.1,
+                child: GestureDetector(
+                  onTap: () async {},
+                  child: Image.network(
+                    "$url/$filepathonline",
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
-            EditMachine(width),
-            ShowAllMachine(height, width),
+            // Submit Button
+            Center(
+              child: Container(
+                width: width * 0.30,
+                child: CupertinoButton(
+                  onPressed: () async {
+                    await UpdatedMachineData(filepath, machine_id.text,
+                        machine_name.text, attributes.text, status.toString());
+
+                    isAddMode = false;
+                    isEditMode = false;
+                    setState(() {});
+                  },
+                  child: Text('Submit'),
+                  color: const Color.fromARGB(113, 255, 193, 7),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Visibility AddNewMachine(double width, double height, BuildContext context) {
+    return Visibility(
+      visible: isAddMode,
+      child: Container(
+        width: width * 0.88,
+        height: height * 0.80,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Machine ID Field
+            TextField(
+              controller: machine_id,
+              decoration: InputDecoration(
+                labelText: 'Machine ID',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Machine Name Field
+            TextField(
+              controller: machine_name,
+              decoration: InputDecoration(
+                labelText: 'Machine Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Attributes Field (JSON)
+            TextField(
+              controller: attributes,
+              maxLines: 4,
+              decoration: InputDecoration(
+                labelText: 'Attributes (JSON)',
+                border: OutlineInputBorder(),
+                hintText: '{"key1": "value1", "key2": "value2"}',
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Status Switch
+            Row(
+              children: [
+                Row(
+                  children: [
+                    Radio<bool>(
+                      value: true,
+                      groupValue: isEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          isEnabled = value!;
+                        });
+                        setState(() {});
+                      },
+                    ),
+                    Text('Enable'),
+                  ],
+                ),
+                SizedBox(width: 16),
+                Row(
+                  children: [
+                    Radio<bool>(
+                      value: false,
+                      groupValue: isEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          isEnabled = value!;
+                          print(value);
+                        });
+                        setState(() {});
+                      },
+                    ),
+                    Text('Disable'),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+
+            // Image Picker Button
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    file = await pickFile();
+                    filepath = file!.path.toString();
+                    setState(() {
+                      print(file!.path.toString());
+                    });
+                  },
+                  child: Text('Upload Image'),
+                ),
+                SizedBox(width: 10),
+                Text(filepath.toString()),
+              ],
+            ),
+            SizedBox(height: 40),
+
+            // Submit Button
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  await uploadMachineData(filepath, machine_id.text,
+                      machine_name.text, attributes.text, status.toString());
+
+                  isAddMode = false;
+                  setState(() {});
+                },
+                child: Text('Submit'),
+              ),
+            ),
           ],
         ),
       ),
@@ -196,7 +428,7 @@ class _MachinePageState extends State<MachinePage> {
         child: Container(
           margin: EdgeInsets.all(height * 0.003),
           child: FutureBuilder(
-            future: fetchData("api/product/"),
+            future: fetchData("api/machine/"),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -213,14 +445,12 @@ class _MachinePageState extends State<MachinePage> {
                     child: Table(
                       columnWidths: {
                         0: FixedColumnWidth(60),
-                        1: FixedColumnWidth(100),
-                        2: FixedColumnWidth(250),
-                        3: FixedColumnWidth(80),
-                        4: FixedColumnWidth(300),
-                        5: FixedColumnWidth(100),
+                        1: FixedColumnWidth(120),
+                        2: FixedColumnWidth(300),
+                        3: FixedColumnWidth(150),
+                        4: FixedColumnWidth(100),
+                        5: FixedColumnWidth(250),
                         6: FixedColumnWidth(100),
-                        7: FixedColumnWidth(100),
-                        8: FixedColumnWidth(90),
                       },
                       border: TableBorder.all(width: 0.2, color: Colors.black),
                       children: [
@@ -236,7 +466,7 @@ class _MachinePageState extends State<MachinePage> {
                           Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Text(
-                              "Product Code".toUpperCase(),
+                              "Machine ID".toUpperCase(),
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -244,7 +474,7 @@ class _MachinePageState extends State<MachinePage> {
                           Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Text(
-                              "Product Title".toUpperCase(),
+                              "Machine Name".toUpperCase(),
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -252,15 +482,7 @@ class _MachinePageState extends State<MachinePage> {
                           Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Text(
-                              "MOQ".toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              "Description".toUpperCase(),
+                              "Photo".toUpperCase(),
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -276,7 +498,7 @@ class _MachinePageState extends State<MachinePage> {
                           Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Text(
-                              "Image".toUpperCase(),
+                              "created_at".toUpperCase(),
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -285,14 +507,6 @@ class _MachinePageState extends State<MachinePage> {
                             padding: const EdgeInsets.all(4.0),
                             child: Text(
                               "Edit".toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              "Delete".toUpperCase(),
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
@@ -311,7 +525,15 @@ class _MachinePageState extends State<MachinePage> {
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                  snapshot.data![i]['product_code']
+                                  snapshot.data![i]['machine_id'].toString() ??
+                                      'N/A',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  snapshot.data![i]['machine_name']
                                           .toString() ??
                                       'N/A',
                                   style: TextStyle(fontSize: 16),
@@ -319,26 +541,44 @@ class _MachinePageState extends State<MachinePage> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  snapshot.data![i]['product_title']
-                                          .toString() ??
-                                      'N/A',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  snapshot.data![i]['moq'].toString() ?? 'N/A',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  snapshot.data![i]['description'].toString() ??
-                                      'N/A',
-                                  style: TextStyle(fontSize: 16),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    void showImageDialog(
+                                        BuildContext context, String imageUrl) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Image.network(
+                                                    "$url/$imageUrl"), // Image from URL
+                                                SizedBox(height: 20),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(); // Close the dialog
+                                                  },
+                                                  child: Text("Close"),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
+
+                                    showImageDialog(context,
+                                        snapshot.data![i]["photo"].toString());
+                                  },
+                                  child: Text(
+                                    "View".toString() ?? 'N/A',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: const Color.fromARGB(
+                                            255, 0, 64, 117)),
+                                  ),
                                 ),
                               ),
                               if (snapshot.data![i]['status'])
@@ -356,8 +596,7 @@ class _MachinePageState extends State<MachinePage> {
                                 )
                               else
                                 Container(
-                                  color:
-                                      const Color.fromARGB(255, 249, 137, 129),
+                                  color: const Color.fromARGB(76, 247, 33, 18),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: Text(
@@ -370,7 +609,7 @@ class _MachinePageState extends State<MachinePage> {
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                  snapshot.data![i]['image'].toString() ??
+                                  snapshot.data![i]['created_at'].toString() ??
                                       'N/A',
                                   style: TextStyle(fontSize: 16),
                                 ),
@@ -383,16 +622,19 @@ class _MachinePageState extends State<MachinePage> {
                                   GestureDetector(
                                     onTap: () async {
                                       machine_id.text = snapshot.data![i]
-                                              ["product_code"]
+                                              ["machine_id"]
                                           .toString();
 
                                       machine_name.text =
-                                          snapshot.data![i]["product_title"];
-        
-                                      description.text = snapshot.data![i]
-                                              ["description"]
+                                          snapshot.data![i]["machine_name"];
+
+                                      attributes.text = snapshot.data![i]
+                                              ["attributes"]
                                           .toString();
+
                                       isEnabled = snapshot.data![i]["status"];
+                                      filepathonline =
+                                          snapshot.data![i]["photo"];
                                       selected = snapshot.data![i]["id"];
                                       isEditMode = true;
                                       isAddMode = false;
@@ -409,16 +651,19 @@ class _MachinePageState extends State<MachinePage> {
                                   GestureDetector(
                                     onTap: () async {
                                       machine_id.text = snapshot.data![i]
-                                              ["product_code"]
+                                              ["machine_id"]
                                           .toString();
 
                                       machine_name.text =
-                                          snapshot.data![i]["product_title"];
-                                    
-                                      description.text = snapshot.data![i]
-                                              ["description"]
-                                          .toString();
+                                          snapshot.data![i]["machine_name"];
+
+                                      attributes.text = jsonEncode(snapshot.data![i]
+                                              ["attributes"]
+                                          .toString());
+
                                       isEnabled = snapshot.data![i]["status"];
+                                      filepathonline =
+                                          snapshot.data![i]["photo"];
                                       selected = snapshot.data![i]["id"];
                                       isEditMode = false;
                                       isAddMode = true;
@@ -433,21 +678,6 @@ class _MachinePageState extends State<MachinePage> {
                                     ),
                                   ),
                                 ],
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  var responce = await http.delete(Uri.parse(
-                                      "$url/api/product/${snapshot.data![i]["id"]}/"));
-                                  print(responce.statusCode);
-                                  print(responce.body);
-                                  setState(() {});
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.delete_forever_outlined,
-                                  ),
-                                ),
                               ),
                             ],
                           ),
@@ -531,21 +761,6 @@ class _MachinePageState extends State<MachinePage> {
               ),
               SizedBox(height: 12),
 
-              // Text Field 3
-              TextField(
-                // controller: moq,
-                decoration: InputDecoration(
-                  hintText: 'Enter MOQ',
-                  filled: true,
-                  fillColor: const Color.fromARGB(255, 255, 255, 255),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintStyle:
-                      TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
-                ),
-              ),
               SizedBox(height: 12),
               Row(
                 children: [
@@ -588,15 +803,18 @@ class _MachinePageState extends State<MachinePage> {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () async {
-                    // var responce =
-                    //     await http.post(Uri.parse("$url/api/product/"), body: {
-                    //   "product_code": product_code.text,
-                    //   "product_title": product_title.text,
-                    //   "description": description.text,
-                    //   "status": isEnabled.toString(),
-                    // });
-                    // print(responce.statusCode);
-                    // print(responce.body);
+                    var request = http.MultipartRequest(
+                        'POST', Uri.parse("$url/api/machine/"));
+                    var file =
+                        await http.MultipartFile.fromPath('photo', filepath);
+                    request.fields["machine_id"] = machine_id.toString();
+                    request.fields["machine_name"] = machine_name.toString();
+                    request.fields["attributes"] = attributes.text.toString();
+                    request.fields["status"] = status.toString();
+                    request.files.add(file);
+                    var response = await request.send();
+                    print(response.statusCode);
+                    print(response.stream);
                     isAddMode = false;
                     setState(() {});
                   },

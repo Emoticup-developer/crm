@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>emoticup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block header %}
+    {% endblock header %}
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-gray-200 text-black flex flex-col">
+            <div class="p-6 flex items-center">
+                <img src="{% static 'webapp/logo.png' %}" alt="Logo" class="h-14">
+            </div>
+            <div class="flex-grow">
+                <nav>
+                    <a href="{% url 'index' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/home.svg' %}" alt="">
+                        <h1>Dashboard</h1>
+                    </a>
+                    <a href="{% url 'localization' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/local.png' %}" alt="">
+                        <h1>Localization</h1>
+                    </a>
+                    <a href="{% url 'product' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/product.png' %}" alt="">
+                        <h1>Product</h1>
+                    </a>
+                    <a href="{% url 'machine' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/machine.png' %}" alt="">
+                        <h1>Machine</h1>
+                    </a>
+                    <a href="{% url 'ticket' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/ticket.png' %}" alt="">
+                        <h1>Tickets</h1>
+                    </a>
+                    <a href="{% url 'order' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/order.png' %}" alt="">
+                        <h1>Orders</h1>
+                    </a>
+                    <a href="{% url 'client' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/client.png' %}" alt="">
+                        <h1>Client</h1>
+                    </a>
+
+                    <a href="{% url 'ratting' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/reviews.png' %}" alt="">
+                        <h1>Ratting</h1>
+                    </a>
+
+                    {% for item in sidenavbar %}
+
+                    <a href="{% url 'ratting' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{{ item.icon.url }}" alt="">
+                        <h1>{{ item.title }}</h1>
+                    </a>
+                    {% endfor %}
+    
+    
+                </nav>
+            </div>
+            <div class="p-4">
+                <button class="w-full py-2 bg-amber-600 hover:bg-amber-500 rounded text-sm">Logout</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-grow flex flex-col">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow p-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <button class="text-gray-500 hover:text-gray-700 lg:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 5h14a1 1 0 010 2H3a1 1 0 010-2zm0 4h14a1 1 0 010 2H3a1 1 0 010-2zm0 4h14a1 1 0 010 2H3a1 1 0 010-2z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <h1 class="ml-4 text-xl font-bold">{% block page %}{% endblock page %}</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+        
+
+
+                    {% for item in topnavbar %}
+
+                    <a href="{{ item.link }}" >
+                        <img class="w-6 h-6 object-contain" src="{{ item.icon.url }}" alt="">
+                    </a>
+
+                    {% endfor %}
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="flex-grow p-4">
+              {% block content %}
+              {% endblock content %}
+
+            </main>
+        </div>
+    </div>
+</body>
+</html>

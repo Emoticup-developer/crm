@@ -47,3 +47,17 @@ Future<List<Map<String, dynamic>>> fetchData(String path) async {
     throw Exception('Failed to load data: ${response.statusCode}');
   }
 }
+
+
+
+Future<List<dynamic>> fetchDataDashboard(path) async {
+  final response = await http.get(Uri.parse('$url/$path'));
+
+  if (response.statusCode == 200) {
+    return json.decode(response.body); // The response is a list.
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+

@@ -1,0 +1,73 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}View Ratting{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="{% url 'product_update' id=product.id %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+
+<section class="w-full mx-auto bg-white p-8 rounded-xl shadow-xl space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h2 class="text-3xl font-bold text-gray-800">{{ product.product_title }}</h2>
+        <span class="text-lg font-semibold text-gray-600">{{ product.product_code }}</span>
+    </div>
+
+    <!-- Product Status -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <p class="text-lg text-gray-700"><strong>Status:</strong> {% if product.status %} Active {% else %} Inactive {% endif %}</p>
+    </div>
+
+    <!-- Product Description -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <h3 class="text-2xl font-semibold text-gray-800">Description</h3>
+        <p class="text-lg text-gray-700">
+            {% if product.description %}
+                {{ product.description }}
+            {% else %}
+                <span class="italic text-gray-500">No description available for this product.</span>
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- Product Photo -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        {% if product.photo %}
+            <p class="text-lg text-gray-700"><strong>Product Photo:</strong></p>
+            <img src="{{ product.photo.url }}" alt="Product Photo" class="w-full h-auto rounded-lg">
+        {% else %}
+            <p class="italic text-gray-500">No photo available for this product.</p>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <div class="text-sm text-gray-500">
+        <span><strong>Created on:</strong> {{ product.created_at|date:"F j, Y, g:i a" }}</span><br>
+        <span><strong>Last updated:</strong> {{ product.updated_at|date:"F j, Y, g:i a" }}</span>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">
+            Edit Product
+        </a>
+        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">
+            Back to Products
+        </a>
+    </div>
+</section>
+
+
+{% endblock content %}

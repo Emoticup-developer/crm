@@ -1,0 +1,74 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}View Ratting{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="{% url 'client_update' id=client.id %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+
+<section class="w-full mx-auto bg-white p-8 rounded-xl shadow-xl space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h2 class="text-3xl font-bold text-gray-800">{{ client.full_name }}</h2>
+        <span class="text-lg font-semibold text-gray-600">{{ client.username }}</span>
+    </div>
+
+    <!-- Client Status -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <p class="text-lg text-gray-700"><strong>Status:</strong> {% if client.status == 'Active' %} Active {% else %} Inactive {% endif %}</p>
+    </div>
+
+    <!-- Basic Information -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <h3 class="text-2xl font-semibold text-gray-800">Basic Information</h3>
+        <p class="text-lg text-gray-700"><strong>Gender:</strong> {{ client.gender }}</p>
+        <p class="text-lg text-gray-700"><strong>Date of Birth:</strong> {% if client.date_of_birth %} {{ client.date_of_birth|date:"F j, Y" }} {% else %} Not Provided {% endif %}</p>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <h3 class="text-2xl font-semibold text-gray-800">Contact Information</h3>
+        <p class="text-lg text-gray-700"><strong>Email:</strong> {% if client.email %} {{ client.email }} {% else %} Not Provided {% endif %}</p>
+        <p class="text-lg text-gray-700"><strong>Mobile Number:</strong> {{ client.mobile_no }}</p>
+    </div>
+
+    <!-- Client Photo -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <h3 class="text-2xl font-semibold text-gray-800">Client Photo</h3>
+        {% if client.photo %}
+            <img src="{{ client.photo.url }}" alt="Client Photo" class="w-32 h-32 rounded-full border border-gray-200">
+        {% else %}
+            <p class="italic text-gray-500">No photo available for this client.</p>
+        {% endif %}
+    </div>
+
+    <!-- Notifications -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <p class="text-lg text-gray-700"><strong>Email/SMS Notification:</strong> {% if client.notify_via_email_sms %} Enabled {% else %} Disabled {% endif %}</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-sm text-gray-500">
+        <span><strong>Created on:</strong> {{ client.created_at|date:"F j, Y, g:i a" }}</span>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+
+    </div>
+</section>
+
+
+{% endblock content %}

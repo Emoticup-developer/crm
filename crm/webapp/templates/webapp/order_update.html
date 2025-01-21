@@ -1,0 +1,151 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}Update Client{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+    <h1 class="text-2xl font-bold mb-6 text-center">Order Details</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Order ID -->
+        <div class="mb-4">
+            <label for="order_id" class="block text-sm font-medium text-gray-700">Order ID</label>
+            <input type="text" name="order_id" id="order_id" value="{{ form.order_id.value|default:'' }}" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly>
+        </div>
+
+        <!-- Order Date -->
+        <div class="mb-4">
+            <label for="order_date" class="block text-sm font-medium text-gray-700">Order Date</label>
+            <input type="date" name="order_date" id="order_date" value="{{ form.order_date.value|default:'' }}" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <!-- Source -->
+        <div class="mb-4">
+            <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
+            <select name="source" id="source" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Source</option>
+                {% for option in form.source.field.queryset %}
+                    <option value="{{ option.id }}" {% if option.id == form.source.value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- PO Number -->
+        <div class="mb-4">
+            <label for="po_number" class="block text-sm font-medium text-gray-700">PO Number</label>
+            <input type="text" name="po_number" id="po_number" value="{{ form.po_number.value|default:'' }}" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <!-- Additional Note -->
+        <div class="mb-4">
+            <label for="additional_note" class="block text-sm font-medium text-gray-700">Additional Note</label>
+            <textarea name="additional_note" id="additional_note" rows="4" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ form.additional_note.value|default:'' }}</textarea>
+        </div>
+
+        <!-- Client -->
+        <div class="mb-4">
+            <label for="client" class="block text-sm font-medium text-gray-700">Client</label>
+            <select name="client" id="client" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Client</option>
+                {% for option in form.client.field.queryset %}
+                    <option value="{{ option.id }}" {% if option.id == form.client.value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Handled By -->
+        <div class="mb-4">
+            <label for="handled_by" class="block text-sm font-medium text-gray-700">Handled By</label>
+            <select name="handled_by" id="handled_by" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Employee</option>
+                {% for option in form.handled_by.field.queryset %}
+                    <option value="{{ option.id }}" {% if option.id == form.handled_by.value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Email/SMS Notification -->
+        <div class="mb-4">
+            <label for="email_sms_notification" class="block text-sm font-medium text-gray-700">Email/SMS Notification</label>
+            <input type="checkbox" name="email_sms_notification" id="email_sms_notification" 
+                {% if form.email_sms_notification.value %}checked{% endif %}
+                class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+        </div>
+
+        <!-- Office Delivery -->
+        <div class="mb-4">
+            <label for="office_delivery" class="block text-sm font-medium text-gray-700">Office Delivery</label>
+            <select name="office_delivery" id="office_delivery" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Office</option>
+                {% for option in form.office_delivery.field.queryset %}
+                    <option value="{{ option.id }}" {% if option.id == form.office_delivery.value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Machine -->
+        <div class="mb-4">
+            <label for="machine" class="block text-sm font-medium text-gray-700">Machine</label>
+            <select name="machine" id="machine" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Machine</option>
+                {% for option in form.machine.field.queryset %}
+                    <option value="{{ option.id }}" {% if option.id == form.machine.value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Products -->
+        <div class="mb-4">
+            <label for="products" class="block text-sm font-medium text-gray-700">Products</label>
+            <select name="products" id="products" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Products</option>
+                {% for option in form.products.field.queryset %}
+                    <option value="{{ option.id }}" {% if option.id == form.products.value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Documents -->
+        <div class="mb-4">
+            <label for="documents" class="block text-sm font-medium text-gray-700">Documents</label>
+            {% if form.documents.value %}
+                <pre class="bg-gray-100 p-2 rounded text-sm">{{ form.documents.value|default:"No documents uploaded" }}</pre>
+            {% endif %}
+            <input type="file" name="documents" id="documents" 
+                class="mt-1 block w-full text-sm text-gray-600 border border-gray-300 rounded-md cursor-pointer focus:outline-none">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-6">
+            <button type="submit" 
+                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Submit Order</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

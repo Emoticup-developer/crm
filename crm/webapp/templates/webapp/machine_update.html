@@ -1,0 +1,86 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}Update Client{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+    <h1 class="text-2xl font-bold mb-6 text-center">Update Machine</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Machine ID -->
+        <div class="mb-4">
+            <label for="machine_id" class="block text-sm font-medium text-gray-700">Machine ID</label>
+            <input type="text" name="machine_id" id="machine_id" value="{{ form.machine_id.value|default:'' }}" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly>
+        </div>
+
+        <!-- Machine Name -->
+        <div class="mb-4">
+            <label for="machine_name" class="block text-sm font-medium text-gray-700">Machine Name</label>
+            <input type="text" name="machine_name" id="machine_name" value="{{ form.machine_name.value|default:'' }}" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            {% for error in form.machine_name.errors %}
+                <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Machine Photo -->
+        <div class="mb-4">
+            <label for="photo" class="block text-sm font-medium text-gray-700">Photo</label>
+            {% if machine.photo %}
+                <img src="{{ machine.photo.url }}" alt="Current Machine Image" class="mb-2 h-20 w-20 object-cover rounded">
+            {% endif %}
+            <input type="file" name="photo" id="photo" 
+                class="mt-1 block w-full text-sm text-gray-600 border border-gray-300 rounded-md cursor-pointer focus:outline-none">
+            {% for error in form.photo.errors %}
+                <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Machine Status -->
+        <div class="mb-4">
+            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+            <select name="status" id="status" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="true" {% if form.status.value == 'true' %}selected{% endif %}>Active</option>
+                <option value="false" {% if form.status.value == 'false' %}selected{% endif %}>Inactive</option>
+            </select>
+            {% for error in form.status.errors %}
+                <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Machine Attributes -->
+        <div class="mb-4">
+            <label for="attributes" class="block text-sm font-medium text-gray-700">Attributes (JSON)</label>
+            <textarea name="attributes" id="attributes" rows="5" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ form.attributes.value|default:'' }}</textarea>
+            {% for error in form.attributes.errors %}
+                <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-6">
+            <button type="submit" 
+                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Update Machine</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

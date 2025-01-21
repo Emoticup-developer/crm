@@ -1,0 +1,144 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}Create Ticket{% endblock page %}
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+        View Data
+    </a>
+    <a href="{% url 'localization_create' %}" class="text-center bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+        Create Data
+    </a>
+    <a href="" class="text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition">
+        Update Data
+    </a>
+    <a href="" class="text-center bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition">
+        Delete Data
+    </a>
+    <a href="" class="text-center bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+        Export Data
+    </a>
+</section>
+
+<section class="bg-white shadow-md rounded-lg p-8 mb-10 w-full mx-auto ">
+
+    <form action="{% url 'ticket_create' %}" method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-black">
+            <!-- Ticket ID -->
+            <div>
+                <label for="ticket_id" class="block text-sm font-medium text-black">Ticket ID</label>
+                <input type="text" id="ticket_id" name="ticket_id" placeholder="Generated automatically" readonly
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100 focus:ring-green-500 focus:border-green-500">
+            </div>
+            <!-- Subject -->
+            <div>
+                <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
+                <input type="text" id="subject" name="subject" placeholder="Enter ticket subject"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500" required>
+            </div>
+            <!-- Type -->
+            <div>
+                <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+                <select id="type" name="type"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500">
+                    <option value="">Select a Type</option>
+                    {% for ttype in ticket_types %}
+                    <option value="{{ ttype.id }}">{{ ttype.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Source -->
+            <div>
+                <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
+                <select id="source" name="source"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500">
+                    <option value="">Select a Source</option>
+                    {% for tsource in ticket_sources %}
+                    <option value="{{ tsource.id }}">{{ tsource.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Client -->
+            <div>
+                <label for="client" class="block text-sm font-medium text-gray-700">Client</label>
+                <select id="client" name="client"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500">
+                    <option value="">Select a Client</option>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client.full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Handled By -->
+            <div>
+                <label for="handled_by" class="block text-sm font-medium text-gray-700">Handled By</label>
+                <select id="handled_by" name="handled_by"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500">
+                    <option value="">Select a Handler</option>
+                    {% for handler in handlers %}
+                    <option value="{{ handler.id }}">{{ handler.full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Office -->
+            <div>
+                <label for="office" class="block text-sm font-medium text-gray-700">Office</label>
+                <select id="office" name="office"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500">
+                    <option value="">Select an Office</option>
+                    {% for office in offices %}
+                    <option value="{{ office.id }}">{{ office.company_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Machine -->
+            <div>
+                <label for="machine" class="block text-sm font-medium text-gray-700">Machine</label>
+                <select id="machine" name="machine"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500">
+                    <option value="">Select a Machine</option>
+                    {% for machine in machines %}
+                    <option value="{{ machine.id }}">{{ machine.machine_name }}-{{ machine.machine_id }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Email/SMS Notification -->
+            <div class="flex items-center col-span-1 md:col-span-2">
+                <input type="checkbox" id="email_sms_notification" name="email_sms_notification"
+                       class="h-4 w-4 text-green-500 border-gray-300 rounded focus:ring-green-400">
+                <label for="email_sms_notification" class="ml-2 block text-sm text-gray-700">Enable Email/SMS Notification</label>
+            </div>
+            <!-- Additional Information -->
+            <div class="col-span-1 md:col-span-2">
+                <label for="additional_information" class="block text-sm font-medium text-gray-700">Additional Information</label>
+                <textarea id="additional_information" name="additional_information" rows="4"
+                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
+                          placeholder="Provide any additional details"></textarea>
+            </div>
+            <!-- Photo -->
+            <div>
+                <label for="photo" class="block text-sm font-medium text-gray-700">Photo</label>
+                <input type="file" id="photo" name="photo" accept="image/*"
+                       class="mt-1 block w-full text-sm text-gray-700 border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+            </div>
+            <!-- Video -->
+            <div>
+                <label for="video" class="block text-sm font-medium text-gray-700">Video</label>
+                <input type="file" id="video" name="video" accept="video/*"
+                       class="mt-1 block w-full text-sm text-gray-700 border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+            </div>
+        </div>
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" 
+                    class="bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-6 rounded-lg">
+                Save Ticket
+            </button>
+        </div>
+    </form>
+</section>
+
+{% endblock content %}

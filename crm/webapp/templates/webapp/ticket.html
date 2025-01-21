@@ -1,0 +1,68 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}Tickets{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        View Data
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Create Data
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Delete Data
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Export Data
+    </a>
+</section>
+
+<div class="bg-white shadow rounded-lg p-6">
+
+    <table class="min-w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Ticket ID</th>
+           
+
+                <th class="border border-gray-300 px-4 py-2 text-left">Types</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Office</th>
+
+
+                <th class="border border-gray-300 px-4 py-2 text-left">Machine Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for localization in ticket %}
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                <td class="border border-gray-300 px-4 py-2">
+                    <a href="{% url 'view_ticket' id=localization.id  %}"> {{ localization.ticket_id }}</a></td>
+                <td class="border border-gray-300 px-4 py-2">{{ localization.type }}</td>
+             
+ 
+       
+                <td class="border border-gray-300 px-4 py-2">{{ localization.office  }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ localization.machine }}</td>
+
+
+
+
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-gray-500 py-4">No data available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

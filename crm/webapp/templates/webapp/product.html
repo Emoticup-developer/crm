@@ -1,0 +1,73 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}Products{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        View Data
+    </a>
+    <a href="{% url 'product_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Create Data
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Delete Data
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Export Data
+    </a>
+</section>
+
+<div class="bg-white shadow rounded-lg p-6">
+
+    <table class="min-w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Product Code</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Product Title</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">MOQ</th>
+    
+
+                <th class="border border-gray-300 px-4 py-2 text-left">status</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">created_at</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for localization in product %}
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                <td class="border border-gray-300 px-4 py-2">
+                    <a href="{% url 'view_product' id=localization.id %}">{{ localization.product_code }}</a>
+                    </td>
+                <td class="border border-gray-300 px-4 py-2">{{ localization.product_title }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ localization.moq }}</td>
+                    
+ 
+
+          
+                <td class="border border-gray-300 px-4 py-2">
+                    {% if localization.status %}
+                    <span class="text-green-500 font-bold">Active</span>
+                    {% else %}
+                    <span class="text-red-500 font-bold">Inactive</span>
+                    {% endif %}
+                </td>
+
+                <td class="border border-gray-300 px-4 py-2">{{ localization.created_at }}</td>
+     
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-gray-500 py-4">No data available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

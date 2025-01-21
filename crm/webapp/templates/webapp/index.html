@@ -1,0 +1,37 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.plotly.com/5.11.0/plotly.min.js"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+{% endblock header %}
+{% block page %}Dashboard{% endblock page %}
+
+
+{% block content %}
+
+<section>
+    <section class="grid grid-cols-2">
+
+
+        <div class="grid-cols-1 my-4">
+            <!-- Render the Day chart as an image -->
+            <img src="data:image/png;base64,{{ day_chart_url }}" alt="Day-wise Counts">
+        </div>
+
+        <div class="grid-cols-1 my-4">
+            <!-- Render the Month chart as an image -->
+            <img src="data:image/png;base64,{{ month_chart_url }}" alt="Month-wise Counts">
+        </div>
+
+
+        <div class="grid-cols-1 my-4">
+            <img src="data:image/png;base64,{{ year_chart_url }}" alt="Year-wise Counts">
+        </div>
+
+    </section>
+</section>
+{% endblock content %}

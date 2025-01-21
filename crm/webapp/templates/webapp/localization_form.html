@@ -1,0 +1,56 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}Create Localization{% endblock page %}
+
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-6">
+    <a href="{% url 'localization' %}" class="text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+        View Data
+    </a>
+    <a href="" class="text-center bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+        Create Data
+    </a>
+    <a href="" class="text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition">
+        Update Data
+    </a>
+    <a href="" class="text-center bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition">
+        Delete Data
+    </a>
+    <a href="" class="text-center bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+        Export Data
+    </a>
+</section>
+
+<div class="bg-white shadow-md rounded-lg p-8 mb-10 w-full mx-auto">
+    <form action="{% url 'localization_create' %}" method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter name" class="mt-1 block w-full h-10 rounded-md border border-gray-300 shadow-sm focus:ring-amber-500 focus:border-amber-500" required>
+            </div>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="description" name="description" rows="4" placeholder="Enter description" class="mt-1 h-10 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-amber-500 focus:border-amber-500"></textarea>
+            </div>
+            <div>
+                <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
+                <input type="file" id="image" name="image" class="mt-1 block w-full text-sm text-gray-700 border h-10 border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500">
+            </div>
+            <div class="flex items-center">
+                <input type="checkbox" id="status" name="status" class="h-10 w-4 text-amber-500 border-gray-300  rounded focus:ring-amber-400">
+                <label for="status" class="ml-2 block text-sm text-gray-700">Active</label>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-white font-bold py-3 px-6 rounded-lg">
+                Save Localization
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

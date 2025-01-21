@@ -40,6 +40,8 @@ dependencies:
   http: ^1.2.2
   filepicker_windows: ^2.1.4
   file_picker: ^8.1.7
+  syncfusion_flutter_charts: ^28.1.39
+  json_editor_flutter: ^1.4.2
 
 
 dev_dependencies:

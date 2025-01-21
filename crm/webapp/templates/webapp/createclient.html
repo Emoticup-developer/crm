@@ -1,0 +1,121 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block page %}Create Client{% endblock page %}
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+        View Data
+    </a>
+    <a href="{% url 'localization_create' %}" class="text-center bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+        Create Data
+    </a>
+    <a href="" class="text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition">
+        Update Data
+    </a>
+    <a href="" class="text-center bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition">
+        Delete Data
+    </a>
+    <a href="" class="text-center bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+        Export Data
+    </a>
+</section>
+<section class="container mx-auto p-6 bg-white rounded-lg shadow">
+
+    <form action="{% url 'client_create' %}" method="post" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {% csrf_token %}
+      
+      <!-- Account ID -->
+      <div>
+        <label for="account_id" class="block text-sm font-medium text-gray-700">Account ID</label>
+        <input type="text" id="account_id" name="account_id" placeholder="Enter Account ID"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+
+      <!-- Full Name -->
+      <div>
+        <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
+        <input type="text" id="full_name" name="full_name" placeholder="Enter Full Name"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+
+      <!-- Gender -->
+      <div>
+        <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+        <select id="gender" name="gender" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+
+      <!-- Date of Birth -->
+      <div>
+        <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+        <input type="date" id="date_of_birth" name="date_of_birth"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter Email"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <!-- Mobile Number -->
+      <div>
+        <label for="mobile_no" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+        <input type="text" id="mobile_no" name="mobile_no" placeholder="Enter Mobile Number"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+
+      <!-- Username -->
+      <div>
+        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter Username"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter Password"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+
+      <!-- Status -->
+      <div>
+        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+        <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <!-- Photo -->
+      <div>
+        <label for="photo" class="block text-sm font-medium text-gray-700">Photo</label>
+        <input type="file" id="photo" name="photo" accept="image/*"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <!-- Email/SMS Notification -->
+      <div class="flex items-center">
+        <input type="checkbox" id="notify_via_email_sms" name="notify_via_email_sms" value="true"
+          class="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-blue-400">
+        <label for="notify_via_email_sms" class="ml-2 block text-sm font-medium text-gray-700">Enable Email/SMS Notifications</label>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="md:col-span-2">
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">
+          Save Client
+        </button>
+      </div>
+    </form>
+</section>
+
+
+{% endblock content %}

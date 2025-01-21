@@ -3,13 +3,22 @@ import 'package:crm_ui/component/component.dart';
 import 'package:crm_ui/localization/localization.dart';
 import 'package:crm_ui/login/login.dart';
 import 'package:crm_ui/product/product.dart';
+import 'package:crm_ui/server/server.dart';
+import 'package:crm_ui/tiket/tiket.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
+}
+
+class ChartData {
+  final String x;
+  final double y;
+  ChartData(this.x, this.y);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -20,34 +29,137 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBarForAll(context),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "main > dashboard",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "main > dashboard",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.all(width * 0.004),
-            width: width,
-            height: height * 0.10,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                width: 0.1,
-                color: Colors.black,
+            SingleChildScrollView(
+              child: FutureBuilder(
+                future: fetchDataDashboard("api/model_counts/"),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return Center(
+                      child: Text('An error occurred: ${snapshot.error}'),
+                    );
+                  }
+
+                  return SingleChildScrollView(
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(width * 0.004),
+                          width: width * 0.45,
+                          height: height * 0.50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              width: 0.1,
+                              color: Colors.black,
+                            ),
+                          ),
+                          child: SfCartesianChart(
+                            primaryXAxis: CategoryAxis(),
+                            title: ChartTitle(text: 'Daily'),
+                            series: <CartesianSeries>[
+                              ColumnSeries<ChartData, String>(
+                                dataSource: <ChartData>[
+                                  for (var entry
+                                      in snapshot.data![0]["day"].entries)
+                                    ChartData(entry.key.toString(),
+                                        double.parse(entry.value.toString())),
+                                ],
+                                xValueMapper: (ChartData data, _) => data.x,
+                                yValueMapper: (ChartData data, _) => data.y,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(width * 0.004),
+                          width: width * 0.48,
+                          height: height * 0.50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              width: 0.1,
+                              color: Colors.black,
+                            ),
+                          ),
+                          child: SfCartesianChart(
+                            primaryXAxis: CategoryAxis(),
+                            title: ChartTitle(text: 'This Month'),
+                            series: <CartesianSeries>[
+                              ColumnSeries<ChartData, String>(
+                                dataSource: <ChartData>[
+                                  for (var entry
+                                      in snapshot.data![0]["month"].entries)
+                                    ChartData(entry.key.toString(),
+                                        double.parse(entry.value.toString())),
+                                ],
+                                xValueMapper: (ChartData data, _) => data.x,
+                                yValueMapper: (ChartData data, _) => data.y,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(width * 0.004),
+                          width: width * 0.47,
+                          height: height * 0.50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              width: 0.1,
+                              color: Colors.black,
+                            ),
+                          ),
+                          child: SfCartesianChart(
+                            primaryXAxis: CategoryAxis(),
+                            title: ChartTitle(text: 'Year'),
+                            series: <CartesianSeries>[
+                              ColumnSeries<ChartData, String>(
+                                dataSource: <ChartData>[
+                                  for (var entry
+                                      in snapshot.data![0]["year"].entries)
+                                    ChartData(entry.key.toString(),
+                                        double.parse(entry.value.toString())),
+                                ],
+                                xValueMapper: (ChartData data, _) => data.x,
+                                yValueMapper: (ChartData data, _) => data.y,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
       drawer: DrawerForAll(),
     );
@@ -190,6 +302,14 @@ class DrawerForAll extends StatelessWidget {
             ),
             children: [
               ListTile(
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TicketPage(),
+                    ),
+                  );
+                },
                 leading: Icon(Icons.edit_document),
                 title: Text("Ticket"),
               ),
@@ -383,9 +503,7 @@ AppBar AppBarForAll(BuildContext context) {
                 ),
               )
               .toList(),
-          onChanged: (value) {
-          
-          },
+          onChanged: (value) {},
           hint: Text(
             'Select',
             style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),

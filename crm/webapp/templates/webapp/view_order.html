@@ -1,0 +1,88 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}View Ratting{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="{% url 'order_update' id=order.id %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+<section class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-xl space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h2 class="text-3xl font-bold text-gray-800">Order #{{ order.order_id }}</h2>
+        <span class="text-lg font-semibold text-gray-600">{{ order.order_date }}</span>
+    </div>
+
+    <!-- Source -->
+    {% if order.source %}
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+            <p class="text-lg text-gray-700"><strong>Order Source:</strong> {{ order.source.name }}</p>
+        </div>
+    {% endif %}
+
+    <!-- PO Number & Additional Notes -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        {% if order.po_number %}
+            <p class="text-lg text-gray-700"><strong>PO Number:</strong> {{ order.po_number }}</p>
+        {% endif %}
+        {% if order.additional_note %}
+            <p class="text-lg text-gray-700"><strong>Additional Notes:</strong> {{ order.additional_note }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Client Information -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <h3 class="text-2xl font-semibold text-gray-800">Client Information</h3>
+        <p class="text-lg text-gray-700"><strong>Client:</strong> {{ order.client.name }}</p>
+        <p class="text-lg text-gray-700"><strong>Handled By:</strong> {{ order.handled_by.name }}</p>
+        <p class="text-lg text-gray-700"><strong>Email/SMS Notifications:</strong> {% if order.email_sms_notification %} Enabled {% else %} Disabled {% endif %}</p>
+        {% if order.office_delivery %}
+            <p class="text-lg text-gray-700"><strong>Office Delivery:</strong> {{ order.office_delivery.name }}</p>
+        {% endif %}
+        {% if order.machine %}
+            <p class="text-lg text-gray-700"><strong>Machine:</strong> {{ order.machine.name }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Order Products -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <h3 class="text-2xl font-semibold text-gray-800">Order Products</h3>
+        <p class="text-lg text-gray-700">
+            <strong>Product:</strong> {{ order.products.name }}
+        </p>
+    </div>
+
+    <!-- Documents -->
+    {% if order.documents %}
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+            <h3 class="text-2xl font-semibold text-gray-800">Documents</h3>
+            <ul class="list-disc pl-6">
+                {% for document in order.documents %}
+                    <li class="text-lg text-gray-700">{{ document }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <!-- Dates -->
+    <div class="text-sm text-gray-500">
+        <span><strong>Created at:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}</span><br>
+        <span><strong>Updated at:</strong> {{ order.updated_at|date:"F j, Y, g:i a" }}</span>
+    </div>
+
+</section>
+
+
+
+{% endblock content %}

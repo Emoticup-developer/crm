@@ -34,7 +34,7 @@ def machine_api(request, pk=None):
                 {"message": "Machine created successfully", "data": serializer.data},
                 status=status.HTTP_201_CREATED,
             )
-
+        print()
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == "PUT":

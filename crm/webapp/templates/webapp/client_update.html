@@ -1,0 +1,150 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}Update Client{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+
+
+
+<div class="bg-gray-200 p-8 rounded-lg shadow-lg w-full grid-cols-2">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Admin -->
+        <div class="mb-4 ">
+            <label for="admin" class="block text-sm font-medium text-gray-700">Admin</label>
+            <select name="admin" id="admin" 
+                class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:ring-indigo-500 h-10 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Admin</option>
+                {% for option in form.admin.field.queryset %}
+                    <option value="{{ option.id }}" {% if option.id == form.admin.value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Company -->
+        <div class="mb-4 ">
+            <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
+            <select name="company" id="company" 
+                class="mt-1 block w-full rounded-md h-10 bg-white border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Company</option>
+                {% for option in form.company.field.queryset %}
+                    <option value="{{ option.id }}" {% if option.id == form.company.value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Account ID -->
+        <div class="mb-4">
+            <label for="account_id" class="block text-sm font-medium text-gray-700">Account ID</label>
+            <input type="text" name="account_id" id="account_id" value="{{ form.account_id.value|default:'' }}" 
+                class="mt-1 block w-full rounded-md h-10 bg-white border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly>
+        </div>
+
+        <!-- Full Name -->
+        <div class="mb-4">
+            <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input type="text" name="full_name" id="full_name" value="{{ form.full_name.value|default:'' }}" 
+                class="mt-1 block w-full rounded-md h-10 bg-white border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <!-- Gender -->
+        <div class="mb-4">
+            <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+            <select name="gender" id="gender" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm h-10 bg-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="" disabled selected>Select Gender</option>
+                {% for value, display in form.gender.field.choices %}
+                    <option value="{{ value }}" {% if value == form.gender.value %}selected{% endif %}>{{ display }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="mb-4">
+            <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+            <input type="date" name="date_of_birth" id="date_of_birth" value="{{ form.date_of_birth.value|default:'' }}" 
+                class="mt-1 block w-full rounded-md h-10 bg-white border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <!-- Photo -->
+        <div class="mb-4">
+            <label for="photo" class="block text-sm font-medium text-gray-700">Photo</label>
+            {% if form.photo.value %}
+                <img src="{{ form.photo.value.url }}" alt="Current Photo" class="h-20 w-20 rounded mb-2">
+            {% endif %}
+            <input type="file" name="photo" id="photo" 
+                class="mt-1 block w-full text-sm h-10 bg-white text-gray-600 border border-gray-300 rounded-md cursor-pointer focus:outline-none">
+        </div>
+
+        <!-- Email -->
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" name="email" id="email" value="{{ form.email.value|default:'' }}" 
+                class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="mb-4">
+            <label for="mobile_no" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+            <input type="text" name="mobile_no" id="mobile_no" value="{{ form.mobile_no.value|default:'' }}" 
+                class="mt-1 block h-10 bg-white w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <!-- Username -->
+        <div class="mb-4">
+            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+            <input type="text" name="username" id="username" value="{{ form.username.value|default:'' }}" 
+                class="mt-1 block h-10 bg-white w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <!-- Password -->
+        <div class="mb-4">
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password"  name="password" id="password" value="{{ form.password.value|default:'' }}" 
+                class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <!-- Status -->
+        <div class="mb-4">
+            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+            <select name="status" id="status" 
+                class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                {% for value, display in form.status.field.choices %}
+                    <option value="{{ value }}" {% if value == form.status.value %}selected{% endif %}>{{ display }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Email/SMS Notification -->
+        <div class="mb-4">
+            <label for="notify_via_email_sms" class="block text-sm font-medium text-gray-700">Email/SMS Notification</label>
+            <input type="checkbox" name="notify_via_email_sms" id="notify_via_email_sms" 
+                {% if form.notify_via_email_sms.value %}checked{% endif %}
+                class="mt-1 w-4 h-10 bg-white text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-6">
+            <button type="submit" 
+                class="w-full bg-amber-400 h-10 text-black py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save Client</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,78 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block page %}Create Product{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+        View Data
+    </a>
+    <a href="{% url 'localization_create' %}" class="text-center bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+        Create Data
+    </a>
+    <a href="" class="text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition">
+        Update Data
+    </a>
+    <a href="" class="text-center bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition">
+        Delete Data
+    </a>
+    <a href="" class="text-center bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+        Export Data
+    </a>
+</section>
+<section class="bg-white shadow-md rounded-lg p-8 mb-10 w-full mx-auto">
+
+    <form action="{% url 'product_create' %}" method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Product Code -->
+            <div>
+                <label for="product_code" class="block text-sm font-medium text-gray-700">Product Code</label>
+                <input type="text" id="product_code" name="product_code" placeholder="Enter product code" 
+                       class="mt-1 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+            <!-- Product Title -->
+            <div>
+                <label for="product_title" class="block text-sm font-medium text-gray-700">Product Title</label>
+                <input type="text" id="product_title" name="product_title" placeholder="Enter product title" 
+                       class="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+            <!-- MOQ -->
+            <div>
+                <label for="moq" class="block text-sm font-medium text-gray-700">Minimum Order Quantity (MOQ)</label>
+                <input type="number" id="moq" name="moq" placeholder="Enter MOQ" 
+                       class="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+            <!-- Photo -->
+            <div>
+                <label for="photo" class="block text-sm font-medium text-gray-700">Product Photo</label>
+                <input type="file" id="photo" name="photo" 
+                       class="mt-1 block w-full h-10 text-sm text-gray-700 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <!-- Description -->
+            <div class="col-span-1 md:col-span-2">
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="description" name="description" rows="4" placeholder="Enter product description"
+                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+            <!-- Status -->
+            <div class="flex items-center">
+                <input type="checkbox" id="status" name="status" 
+                       class="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-blue-400">
+                <label for="status" class="ml-2 block text-sm text-gray-700">Active</label>
+            </div>
+        </div>
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" 
+                    class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
+                Save Product
+            </button>
+        </div>
+    </form>
+</section>
+
+{% endblock content %}
