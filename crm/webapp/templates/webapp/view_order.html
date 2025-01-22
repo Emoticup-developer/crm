@@ -17,72 +17,89 @@
     </a>
 
 </section>
-<section class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-xl space-y-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h2 class="text-3xl font-bold text-gray-800">Order #{{ order.order_id }}</h2>
-        <span class="text-lg font-semibold text-gray-600">{{ order.order_date }}</span>
+
+
+
+<div class="container mx-auto mt-4">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <table class="table-auto w-full text-left border-collapse border border-gray-200">
+            <tbody>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium w-1/3">Order ID</th>
+                    <td class="py-2 px-4">{{ order.order_id }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Order Date</th>
+                    <td class="py-2 px-4">{{ order.order_date|date:"Y-m-d" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Source</th>
+                    <td class="py-2 px-4">{{ order.source.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">PO Number</th>
+                    <td class="py-2 px-4">{{ order.po_number|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Additional Note</th>
+                    <td class="py-2 px-4">{{ order.additional_note|default:"None" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Client</th>
+                    <td class="py-2 px-4">{{ order.client.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Handled By</th>
+                    <td class="py-2 px-4">{{ order.handled_by.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Email/SMS Notification</th>
+                    <td class="py-2 px-4">
+                        {% if order.email_sms_notification %}
+                            <span class="text-green-600 font-bold">Enabled</span>
+                        {% else %}
+                            <span class="text-red-600 font-bold">Disabled</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Office Delivery</th>
+                    <td class="py-2 px-4">{{ order.office_delivery.company_name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Machine</th>
+                    <td class="py-2 px-4">{{ order.machine.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Products</th>
+                    <td class="py-2 px-4">{{ order.products.name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Documents</th>
+                    <td class="py-2 px-4">
+                        {% if order.documents %}
+                            <ul>
+                                {% for doc_key, doc_value in order.documents.items %}
+                                <li><strong>{{ doc_key }}:</strong> {{ doc_value }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="text-gray-500">No Documents</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Created At</th>
+                    <td class="py-2 px-4">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                <tr>
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Updated At</th>
+                    <td class="py-2 px-4">{{ order.updated_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    <!-- Source -->
-    {% if order.source %}
-        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-            <p class="text-lg text-gray-700"><strong>Order Source:</strong> {{ order.source.name }}</p>
-        </div>
-    {% endif %}
-
-    <!-- PO Number & Additional Notes -->
-    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        {% if order.po_number %}
-            <p class="text-lg text-gray-700"><strong>PO Number:</strong> {{ order.po_number }}</p>
-        {% endif %}
-        {% if order.additional_note %}
-            <p class="text-lg text-gray-700"><strong>Additional Notes:</strong> {{ order.additional_note }}</p>
-        {% endif %}
-    </div>
-
-    <!-- Client Information -->
-    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <h3 class="text-2xl font-semibold text-gray-800">Client Information</h3>
-        <p class="text-lg text-gray-700"><strong>Client:</strong> {{ order.client.name }}</p>
-        <p class="text-lg text-gray-700"><strong>Handled By:</strong> {{ order.handled_by.name }}</p>
-        <p class="text-lg text-gray-700"><strong>Email/SMS Notifications:</strong> {% if order.email_sms_notification %} Enabled {% else %} Disabled {% endif %}</p>
-        {% if order.office_delivery %}
-            <p class="text-lg text-gray-700"><strong>Office Delivery:</strong> {{ order.office_delivery.name }}</p>
-        {% endif %}
-        {% if order.machine %}
-            <p class="text-lg text-gray-700"><strong>Machine:</strong> {{ order.machine.name }}</p>
-        {% endif %}
-    </div>
-
-    <!-- Order Products -->
-    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <h3 class="text-2xl font-semibold text-gray-800">Order Products</h3>
-        <p class="text-lg text-gray-700">
-            <strong>Product:</strong> {{ order.products.name }}
-        </p>
-    </div>
-
-    <!-- Documents -->
-    {% if order.documents %}
-        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-            <h3 class="text-2xl font-semibold text-gray-800">Documents</h3>
-            <ul class="list-disc pl-6">
-                {% for document in order.documents %}
-                    <li class="text-lg text-gray-700">{{ document }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-
-    <!-- Dates -->
-    <div class="text-sm text-gray-500">
-        <span><strong>Created at:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}</span><br>
-        <span><strong>Updated at:</strong> {{ order.updated_at|date:"F j, Y, g:i a" }}</span>
-    </div>
-
-</section>
-
+</div>
 
 
 {% endblock content %}

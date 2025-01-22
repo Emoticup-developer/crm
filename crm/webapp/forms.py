@@ -202,6 +202,18 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = "__all__"
+        
+
+class CompanyForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = "__all__"
+
+
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        fields = "__all__"
 
 
 class LocalizationForm(forms.ModelForm):

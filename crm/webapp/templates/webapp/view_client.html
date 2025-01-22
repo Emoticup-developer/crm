@@ -17,58 +17,84 @@
     </a>
 
 </section>
-
-<section class="w-full mx-auto bg-white p-8 rounded-xl shadow-xl space-y-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h2 class="text-3xl font-bold text-gray-800">{{ client.full_name }}</h2>
-        <span class="text-lg font-semibold text-gray-600">{{ client.username }}</span>
+<div class="container mx-auto mt-3">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <table class="table-auto w-full text-left border-collapse border border-gray-200">
+            <tbody>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium w-1/3">Account ID</th>
+                    <td class="py-2 px-4">{{ client.account_id }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Full Name</th>
+                    <td class="py-2 px-4">{{ client.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Gender</th>
+                    <td class="py-2 px-4">{{ client.gender }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Date of Birth</th>
+                    <td class="py-2 px-4">{{ client.date_of_birth|date:"Y-m-d" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Photo</th>
+                    <td class="py-2 px-4">
+                        {% if client.photo %}
+                            <img src="{{ client.photo.url }}" alt="{{ client.full_name }}" class="w-20 h-20 rounded-full">
+                        {% else %}
+                            <span class="text-gray-500">No Photo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Email</th>
+                    <td class="py-2 px-4">{{ client.email|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Mobile Number</th>
+                    <td class="py-2 px-4">{{ client.mobile_no }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Username</th>
+                    <td class="py-2 px-4">{{ client.username }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Status</th>
+                    <td class="py-2 px-4">
+                        {% if client.status == "Active" %}
+                            <span class="text-green-600 font-bold">Active</span>
+                        {% else %}
+                            <span class="text-red-600 font-bold">Inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Notify via Email/SMS</th>
+                    <td class="py-2 px-4">
+                        {% if client.notify_via_email_sms %}
+                            <span class="text-green-600 font-bold">Yes</span>
+                        {% else %}
+                            <span class="text-red-600 font-bold">No</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Created At</th>
+                    <td class="py-2 px-4">{{ client.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Admin</th>
+                    <td class="py-2 px-4">{{ client.admin.full_name|default:"NA" }}</td>
+                </tr>
+                <tr>
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Company</th>
+                    <td class="py-2 px-4">{{ client.company.company_name|default:"NA" }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    <!-- Client Status -->
-    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <p class="text-lg text-gray-700"><strong>Status:</strong> {% if client.status == 'Active' %} Active {% else %} Inactive {% endif %}</p>
-    </div>
-
-    <!-- Basic Information -->
-    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <h3 class="text-2xl font-semibold text-gray-800">Basic Information</h3>
-        <p class="text-lg text-gray-700"><strong>Gender:</strong> {{ client.gender }}</p>
-        <p class="text-lg text-gray-700"><strong>Date of Birth:</strong> {% if client.date_of_birth %} {{ client.date_of_birth|date:"F j, Y" }} {% else %} Not Provided {% endif %}</p>
-    </div>
-
-    <!-- Contact Information -->
-    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <h3 class="text-2xl font-semibold text-gray-800">Contact Information</h3>
-        <p class="text-lg text-gray-700"><strong>Email:</strong> {% if client.email %} {{ client.email }} {% else %} Not Provided {% endif %}</p>
-        <p class="text-lg text-gray-700"><strong>Mobile Number:</strong> {{ client.mobile_no }}</p>
-    </div>
-
-    <!-- Client Photo -->
-    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <h3 class="text-2xl font-semibold text-gray-800">Client Photo</h3>
-        {% if client.photo %}
-            <img src="{{ client.photo.url }}" alt="Client Photo" class="w-32 h-32 rounded-full border border-gray-200">
-        {% else %}
-            <p class="italic text-gray-500">No photo available for this client.</p>
-        {% endif %}
-    </div>
-
-    <!-- Notifications -->
-    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <p class="text-lg text-gray-700"><strong>Email/SMS Notification:</strong> {% if client.notify_via_email_sms %} Enabled {% else %} Disabled {% endif %}</p>
-    </div>
-
-    <!-- Footer -->
-    <div class="text-sm text-gray-500">
-        <span><strong>Created on:</strong> {{ client.created_at|date:"F j, Y, g:i a" }}</span>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="flex items-center justify-between pt-4 border-t border-gray-200">
-
-    </div>
-</section>
-
+   
+</div>
 
 {% endblock content %}

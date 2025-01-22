@@ -2,9 +2,10 @@ from django.shortcuts import render
 from api.models import *
 from .forms import *
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 
-
+@login_required
 def localization_update(request,id):
     if request.method == "POST":
         form = LocalizationForm(
@@ -20,7 +21,7 @@ def localization_update(request,id):
         form = LocalizationForm(instance=Localization.objects.filter(id=id).first())
     return render(request, "webapp/localization_update.html", {"form": form})
 
-
+@login_required
 def product_update(request,id):
     if request.method == "POST":
         form = ProductForm(
@@ -36,7 +37,7 @@ def product_update(request,id):
         form = ProductForm(instance=Product.objects.filter(id=id).first())
     return render(request, "webapp/product_update.html", {"form": form})
 
-
+@login_required
 def machine_update(request,id):
     if request.method == "POST":
         form = MachineForm(
@@ -54,7 +55,7 @@ def machine_update(request,id):
 
 
 from django.shortcuts import get_object_or_404
-
+@login_required
 def ticket_update(request, id):
     ticket = get_object_or_404(Ticket, id=id)
 
@@ -80,8 +81,10 @@ def ticket_update(request, id):
 
     return render(request, "webapp/ticket_update.html", context)
 
-from django.shortcuts import get_object_or_404
 
+
+
+@login_required
 def order_update(request, id):
     order = get_object_or_404(Order, id=id)
 
@@ -113,6 +116,9 @@ def order_update(request, id):
 
     return render(request, "webapp/order_update.html", context)
 
+
+
+@login_required
 def client_update(request,id):
     if request.method == "POST":
         form = ClientForm(
@@ -127,3 +133,47 @@ def client_update(request,id):
     else:
         form = ClientForm(instance=Client.objects.filter(id=id).first())
     return render(request, "webapp/client_update.html", {"form": form})
+
+
+
+
+
+
+
+@login_required
+def client_company(request,id=None):
+    if request.method == "POST":
+        form = CompanyForm(
+            request.POST,
+            request.FILES,
+            instance=Company.objects.filter(company_name=request.POST["company_name"]).first(),
+        )
+        if form.is_valid():
+            client = form.save()
+            client.save()
+            return redirect("index")
+        else:
+            print(form.errors)
+    else:
+        form = CompanyForm(instance=Company.objects.filter(id=id).first())
+    return render(request, "webapp/client_company.html", {"form": form})
+
+
+
+
+
+@login_required
+def client_location(request,id):
+    if request.method == "POST":
+        form = LocationForm(
+            request.POST,
+            request.FILES,
+            instance=Location.objects.filter(title=request.POST["title"]).first(),
+        )
+        if form.is_valid():
+            client = form.save()
+            client.save()
+            return redirect("index")
+    else:
+        form = LocationForm(instance=Location.objects.filter(id=id).first())
+    return render(request, "webapp/client_location.html", {"form": form,"company":Company.objects.all()})

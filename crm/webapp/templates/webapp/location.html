@@ -3,17 +3,17 @@
 {% block header %}
 {% endblock header %}
 
-{% block page %}Client{% endblock page %}
+{% block page %}Location{% endblock page %}
 
 {% block content %}
 <section class="container grid grid-cols-5 gap-4 my-4">
     <a href="" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         View Data
     </a>
-    <a href="{% url 'client_create' %}" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+    <a href="{% url 'location_create' %}" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Create Data
     </a>
-    <a href="{% url 'download_client' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+    <a href="{% url 'download_location' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Download Excel 
     </a>
 </section>
@@ -24,25 +24,26 @@
         <thead class="bg-gray-100">
             <tr>
                 <th class="border border-gray-300 px-4 py-2 text-left">#</th>
-                <th class="border border-gray-300 px-4 py-2 text-left">Account ID</th>
-                <th class="border border-gray-300 px-4 py-2 text-left">Full Name</th>
-                <th class="border border-gray-300 px-4 py-2 text-left">Gender</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Location</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Company
+                </th>
+                <th class="border border-gray-300 px-4 py-2 text-left">State</th>
     
-                <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">City</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">Created At</th>
             </tr>
         </thead>
         <tbody>
-            {% for client in clients %}
+            {% for client in location %}
             <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
                 <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
                 <td class="border border-gray-300 px-4 py-2">
-                    <a href="{% url 'view_client' id=client.id %}">{{ client.account_id }}</a>
+                    <a href="{% url 'view_location' id=client.id %}">{{ client.title }}</a>
                     </td>
-                <td class="border border-gray-300 px-4 py-2">{{ client.full_name }}</td>
-                <td class="border border-gray-300 px-4 py-2">{{ client.gender }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ client.company.company_name }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ client.state }}</td>
         
-                <td class="border border-gray-300 px-4 py-2">{{ client.status }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ client.city }}</td>
                 <td class="border border-gray-300 px-4 py-2">{{ client.created_at }}</td>
             </tr>
             {% empty %}

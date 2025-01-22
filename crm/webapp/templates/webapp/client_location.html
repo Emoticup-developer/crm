@@ -1,0 +1,111 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block page %}Create Client{% endblock page %}
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+        View Data
+    </a>
+    <a href="{% url 'localization_create' %}" class="text-center bg-gray-400     text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
+        Create Data
+    </a>
+    
+</section>
+<div class="w-full max-w-4xl mx-auto ">
+    <form method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow-md">
+        {% csrf_token %}
+        
+        <div class="space-y-6">
+            <!-- Title -->
+            <div class="flex items-center space-x-4">
+                <label for="title" class="w-1/4 text-sm font-medium text-gray-700">Title</label>
+                <input type="text" name="title" id="title" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" readonly required value="{{ form.title.value }}">
+                {{ form.title.errors }}
+            </div>
+
+            <!-- Map Link -->
+            <div class="flex items-center space-x-4">
+                <label for="map_link" class="w-1/4 text-sm font-medium text-gray-700">Map Link</label>
+                <input type="text" name="map_link" id="map_link" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" required value="{{ form.map_link.value }}">
+                {{ form.map_link.errors }}
+            </div>
+
+            <!-- Address Line 1 -->
+            <div class="flex items-center space-x-4">
+                <label for="address_line_1" class="w-1/4 text-sm font-medium text-gray-700">Address Line 1</label>
+                <input type="text" name="address_line_1" id="address_line_1" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" required value="{{ form.address_line_1.value }}">
+                {{ form.address_line_1.errors }}
+            </div>
+
+            <!-- Address Line 2 -->
+            <div class="flex items-center space-x-4">
+                <label for="address_line_2" class="w-1/4 text-sm font-medium text-gray-700">Address Line 2</label>
+                <input type="text" name="address_line_2" id="address_line_2" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" required value="{{ form.address_line_2.value }}">
+                {{ form.address_line_2.errors }}
+            </div>
+
+            <!-- City -->
+            <div class="flex items-center space-x-4">
+                <label for="city" class="w-1/4 text-sm font-medium text-gray-700">City</label>
+                <input type="text" name="city" id="city" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" required value="{{ form.city.value }}">
+                {{ form.city.errors }}
+            </div>
+
+            <!-- State -->
+            <div class="flex items-center space-x-4">
+                <label for="state" class="w-1/4 text-sm font-medium text-gray-700">State</label>
+                <input type="text" name="state" id="state" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" required value="{{ form.state.value }}">
+                {{ form.state.errors }}
+            </div>
+
+            <!-- Country -->
+            <div class="flex items-center space-x-4">
+                <label for="country" class="w-1/4 text-sm font-medium text-gray-700">Country</label>
+                <input type="text" name="country" id="country" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" required value="{{ form.country.value }}">
+                {{ form.country.errors }}
+            </div>
+
+            <!-- Pincode -->
+            <div class="flex items-center space-x-4">
+                <label for="pincode" class="w-1/4 text-sm font-medium text-gray-700">Pincode</label>
+                <input type="text" name="pincode" id="pincode" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" required value="{{ form.pincode.value }}">
+                {{ form.pincode.errors }}
+            </div>
+
+          
+          
+    
+
+            <!-- Status -->
+            <div class="flex items-center space-x-4">
+                <label for="status" class="w-1/4 text-sm font-medium text-gray-700">Status</label>
+                <input type="checkbox" name="status" id="status" class="mt-1 block" {% if form.status.value %}checked{% endif %}>
+                {{ form.status.errors }}
+            </div>
+
+            <!-- Company -->
+            <div class="flex items-center space-x-4">
+                <label for="company" class="w-1/4 text-sm font-medium text-gray-700">Company</label>
+                <select name="company" id="company" class="w-3/4 mt-1 block border border-gray-300 rounded-md p-2" required>
+                    <option value="">Select a company</option>
+                    {% for company in company %}
+                        <option value="{{ company.id }}" {% if company.id == form.company.value %}selected{% endif %}>{{ company.company_name }}</option>
+                    {% endfor %}
+                </select>
+                {{ form.company.errors }}
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-6 text-center">
+            <button type="submit" class="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                Save Location
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

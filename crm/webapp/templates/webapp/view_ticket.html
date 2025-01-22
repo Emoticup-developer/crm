@@ -18,59 +18,88 @@
     </a>
 
 </section>
-<section class="w-full  p-4 rounded-xl shadow-xl">
-    <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h2 class="text-2xl font-bold text-gray-800">Ticket #{{ ticket.ticket_id }} - {{ ticket.subject }}</h2>
-        <span class="text-sm font-medium text-gray-600">{{ ticket.created_at|date:"F j, Y, g:i a" }}</span>
+
+
+<div class="container mx-auto mt-2">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <table class="table-auto w-full text-left border-collapse border border-gray-200">
+            <tbody>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium w-1/3">Ticket ID</th>
+                    <td class="py-2 px-4">{{ ticket.ticket_id }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Type</th>
+                    <td class="py-2 px-4">{{ ticket.type.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Source</th>
+                    <td class="py-2 px-4">{{ ticket.source.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Client</th>
+                    <td class="py-2 px-4">{{ ticket.client.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Handled By</th>
+                    <td class="py-2 px-4">{{ ticket.handled_by.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Email/SMS Notification</th>
+                    <td class="py-2 px-4">
+                        {% if ticket.email_sms_notification %}
+                            <span class="text-green-600 font-bold">Enabled</span>
+                        {% else %}
+                            <span class="text-red-600 font-bold">Disabled</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Office</th>
+                    <td class="py-2 px-4">{{ ticket.office.company_name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Machine</th>
+                    <td class="py-2 px-4">{{ ticket.machine.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Subject</th>
+                    <td class="py-2 px-4">{{ ticket.subject }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Additional Information</th>
+                    <td class="py-2 px-4">{{ ticket.additional_information|default:"None" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Photo</th>
+                    <td class="py-2 px-4">
+                        {% if ticket.photo %}
+                            <a href="{{ ticket.photo.url }}" class="text-blue-600 underline" target="_blank">View Photo</a>
+                        {% else %}
+                            <span class="text-gray-500">No Photo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Video</th>
+                    <td class="py-2 px-4">
+                        {% if ticket.video %}
+                            <a href="{{ ticket.video.url }}" class="text-blue-600 underline" target="_blank">View Video</a>
+                        {% else %}
+                            <span class="text-gray-500">No Video</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Created At</th>
+                    <td class="py-2 px-4">{{ ticket.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                <tr>
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Updated At</th>
+                    <td class="py-2 px-4">{{ ticket.updated_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    <!-- Ticket Details -->
-    <div class="mt-4 grid grid-cols-1 gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-        {% if ticket.type %}
-        <p><strong>Ticket Type:</strong> {{ ticket.type.name }}</p>
-        {% endif %}
-        {% if ticket.source %}
-        <p><strong>Source:</strong> {{ ticket.source.name }}</p>
-        {% endif %}
-        <p><strong>Client:</strong> {{ ticket.client.full_name }}</p>
-        <p><strong>Handled By:</strong> {{ ticket.handled_by.full_name }}</p>
-        <p><strong>Notifications:</strong> {% if ticket.email_sms_notification %} Enabled {% else %} Disabled {% endif %}</p>
-        {% if ticket.office %}
-        <p><strong>Office:</strong> {{ ticket.office.company_name }}</p>
-        {% endif %}
-        {% if ticket.machine %}
-        <p><strong>Machine:</strong> {{ ticket.machine.machine_name }}</p>
-        {% endif %}
-        <p><strong>Subject:</strong> {{ ticket.subject }}</p>
-        {% if ticket.additional_information %}
-        <p><strong>Additional Information:</strong> {{ ticket.additional_information }}</p>
-        {% else %}
-        <p class="italic text-gray-500">No additional information provided.</p>
-        {% endif %}
-    </div>
-
-    <!-- Media -->
-    <div class="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-        {% if ticket.photo %}
-        <p><strong>Attached Photo:</strong></p>
-        <img src="{{ ticket.photo.url }}" alt="Ticket Photo" class="w-full max-h-64 object-contain rounded-lg">
-        {% endif %}
-        {% if ticket.video %}
-        <p><strong>Attached Video:</strong></p>
-        <video controls class="w-full max-h-64 rounded-lg">
-            <source src="{{ ticket.video.url }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        {% endif %}
-    </div>
-
-    <!-- Footer -->
-    <div class="text-xs text-gray-500 mt-4">
-        <span><strong>Last Updated:</strong> {{ ticket.updated_at|date:"F j, Y, g:i a" }}</span>
-    </div>
-</section>
-
-
-
+</div>
 {% endblock content %}

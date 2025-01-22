@@ -1,0 +1,108 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}View Ratting{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="{% url 'client_company' id=company.id %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+<div class="container mx-auto mt-5">
+ 
+
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <table class="table-auto w-full text-left border-collapse border border-gray-200">
+            <tbody>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium w-1/3">Company Name</th>
+                    <td class="py-2 px-4">{{ company.company_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Brand Name</th>
+                    <td class="py-2 px-4">{{ company.brand_name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Phone</th>
+                    <td class="py-2 px-4">{{ company.company_phone }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Website</th>
+                    <td class="py-2 px-4">{{ company.website|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Email</th>
+                    <td class="py-2 px-4">{{ company.company_email }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Mobile No</th>
+                    <td class="py-2 px-4">{{ company.company_mobile_no }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">GSTIN</th>
+                    <td class="py-2 px-4">{{ company.gstin|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">PAN</th>
+                    <td class="py-2 px-4">{{ company.pan_number|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Communication Address</th>
+                    <td class="py-2 px-4">{{ company.comm_address }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">City</th>
+                    <td class="py-2 px-4">{{ company.city|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">State</th>
+                    <td class="py-2 px-4">{{ company.state|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Pincode</th>
+                    <td class="py-2 px-4">{{ company.pincode|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Contact Person</th>
+                    <td class="py-2 px-4">{{ company.contact_person_name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Enrollment Date</th>
+                    <td class="py-2 px-4">{{ company.enrollment_date }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Brand Logo</th>
+                    <td class="py-2 px-4">
+                        {% if company.brand_logo %}
+                            <img src="{{ company.brand_logo.url }}" alt="Logo" class="w-16 h-16 rounded">
+                        {% else %}
+                            NA
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Brand Icon</th>
+                    <td class="py-2 px-4">
+                        {% if company.brand_icon %}
+                            <img src="{{ company.brand_icon.url }}" alt="Icon" class="w-10 h-10 rounded">
+                        {% else %}
+                            NA
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock content %}

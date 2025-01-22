@@ -13,8 +13,8 @@
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="w-64 bg-gray-200 text-black flex flex-col">
-            <div class="p-6 flex items-center">
-                <img src="{% static 'webapp/logo.png' %}" alt="Logo" class="h-14">
+            <div class="p-3  flex items-center m-auto">
+                <img src="{% static 'webapp/logo.png' %}" alt="Logo" class="h-9 m-auto object-contain">
             </div>
             <div class="flex-grow">
                 <nav>
@@ -47,6 +47,17 @@
                         <h1>Client</h1>
                     </a>
 
+                    <a href="{% url 'company' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/office.png' %}" alt="">
+                        <h1>Company</h1>
+                    </a>
+
+
+                    <a href="{% url 'location' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/location.png' %}" alt="">
+                        <h1>Locations</h1>
+                    </a>
+
                     <a href="{% url 'ratting' %}" class="grid grid-cols-6 py-2 px-4 my-2 hover:bg-amber-600">
                         <img class="w-6 h-6 object-contain" src="{% static 'webapp/reviews.png' %}" alt="">
                         <h1>Ratting</h1>
@@ -64,7 +75,7 @@
                 </nav>
             </div>
             <div class="p-4">
-                <button class="w-full py-2 bg-amber-600 hover:bg-amber-500 rounded text-sm">Logout</button>
+                <button class="w-full py-2 bg-amber-100 hover:bg-amber-200 border border-black rounded text-sm">Logout</button>
             </div>
         </div>
 
@@ -91,6 +102,14 @@
                     </a>
 
                     {% endfor %}
+
+
+                    
+                    <a href="{{ item.link }}" >
+                        <img class="w-8 h-8 object-contain" src="{{ account.photo.url }}" alt="">
+                    </a>
+
+
                 </div>
             </header>
 

@@ -70,13 +70,6 @@ class Company(models.Model):
 
 
 class Location(models.Model):
-    ACTIVE = "Active"
-    CLOSED = "Closed"
-    STATUS_CHOICES = [
-        (ACTIVE, "Active"),
-        (CLOSED, "Closed"),
-    ]
-
     title = models.CharField(max_length=100, blank=True, null=True)
     map_link = models.CharField(max_length=2000, blank=True, null=True)
     address_line_1 = models.CharField(max_length=750, blank=True, null=True)
@@ -85,7 +78,7 @@ class Location(models.Model):
     state = models.CharField(max_length=50, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
     pincode = models.CharField(max_length=6, blank=True, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=ACTIVE)
+    status = models.BooleanField(null=True,blank=True,default=False)
     created_at = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(
         Company,
@@ -123,8 +116,8 @@ class Client(models.Model):
         max_length=30,
         unique=True,
         default=uuid.uuid4,
-        verbose_name="Account ID",
-        help_text="Unique identifier, max 30 characters.",
+        
+        auto_created=True,
     )
     full_name = models.CharField(
         max_length=100,

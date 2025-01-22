@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -9,22 +10,28 @@
 <body class="bg-gray-100 flex items-center justify-center h-screen">
   <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
     <!-- Logo Section -->
-    <div class="text-center mb-6">
+    <!-- <div class="text-center mb-6">
       <h1 class="text-4xl font-bold text-yellow-600">
         <span class="text-black">emoti</span>cup
       </h1>
       <p class="text-sm text-gray-600">Brewing Memories</p>
     </div>
     
+     -->
+
+
+     <img src="{% static 'webapp/logo.png' %}" alt="" class="m-auto">
     <!-- Login Section -->
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">Login</h2>
-    <form>
+    <h2 class="text-3xl text-center font-semibold text-gray-800 mb-4">Login</h2>
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
       <!-- Username Field -->
       <div class="mb-4">
         <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
         <input 
           type="text" 
           id="username" 
+          name="username"
           class="w-full border border-red-500 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-yellow-600"
           placeholder="Enter your username"
           required
@@ -40,6 +47,7 @@
         <input 
           type="password" 
           id="password" 
+          name="password"
           class="w-full border border-red-500 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-yellow-600"
           placeholder="Enter your password"
           required

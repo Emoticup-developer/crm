@@ -1,0 +1,85 @@
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+{% block page %}View Ratting{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download
+    </a>
+    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        PlaceHolder
+    </a>
+    <a href="{% url 'client_location' id=location.id %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Update Data
+    </a>
+
+</section>
+<div class="container mx-auto mt-3">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <table class="table-auto w-full text-left border-collapse border border-gray-200">
+            <tbody>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium w-1/3">Title</th>
+                    <td class="py-2 px-4">{{ location.title|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Map Link</th>
+                    <td class="py-2 px-4">
+                        {% if location.map_link %}
+                            <a href="{{ location.map_link }}" class="text-blue-500 underline" target="_blank">View Map</a>
+                        {% else %}
+                            NA
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Address Line 1</th>
+                    <td class="py-2 px-4">{{ location.address_line_1|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Address Line 2</th>
+                    <td class="py-2 px-4">{{ location.address_line_2|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">City</th>
+                    <td class="py-2 px-4">{{ location.city|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">State</th>
+                    <td class="py-2 px-4">{{ location.state|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Country</th>
+                    <td class="py-2 px-4">{{ location.country|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Pincode</th>
+                    <td class="py-2 px-4">{{ location.pincode|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Status</th>
+                    <td class="py-2 px-4">
+                        {% if location.status %}
+                            <span class="text-green-600 font-bold">Active</span>
+                        {% else %}
+                            <span class="text-red-600 font-bold">Inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Created At</th>
+                    <td class="py-2 px-4">{{ location.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                <tr>
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Company</th>
+                    <td class="py-2 px-4">{{ location.company.company_name|default:"NA" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock content %}
