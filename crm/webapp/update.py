@@ -4,6 +4,7 @@ from .forms import *
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
+from django.contrib import messages
 
 @login_required
 def localization_update(request,id):
@@ -17,6 +18,8 @@ def localization_update(request,id):
             client = form.save()
             client.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = LocalizationForm(instance=Localization.objects.filter(id=id).first())
     return render(request, "webapp/localization_update.html", {"form": form})
@@ -33,6 +36,8 @@ def product_update(request,id):
             client = form.save()
             client.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = ProductForm(instance=Product.objects.filter(id=id).first())
     return render(request, "webapp/product_update.html", {"form": form})
@@ -49,6 +54,8 @@ def machine_update(request,id):
             client = form.save()
             client.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = MachineForm(instance=Machine.objects.filter(id=id).first())
     return render(request, "webapp/machine_update.html", {"form": form})
@@ -66,6 +73,8 @@ def ticket_update(request, id):
             form.save()
             print("data saved")
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = TicketForm(instance=ticket)
 
@@ -94,6 +103,8 @@ def order_update(request, id):
         if form.is_valid():
             form.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = OrderForm(instance=order)
 
@@ -130,6 +141,8 @@ def client_update(request,id):
             client = form.save()
             client.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = ClientForm(instance=Client.objects.filter(id=id).first())
     return render(request, "webapp/client_update.html", {"form": form})
@@ -153,7 +166,7 @@ def client_company(request,id=None):
             client.save()
             return redirect("index")
         else:
-            print(form.errors)
+            messages.error(request,f"{form.errors}")
     else:
         form = CompanyForm(instance=Company.objects.filter(id=id).first())
     return render(request, "webapp/client_company.html", {"form": form})
@@ -174,6 +187,8 @@ def client_location(request,id):
             client = form.save()
             client.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = LocationForm(instance=Location.objects.filter(id=id).first())
     return render(request, "webapp/client_location.html", {"form": form,"company":Company.objects.all()})

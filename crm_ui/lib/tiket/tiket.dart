@@ -1,4 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 
 import 'package:crm_ui/homepage/homepage.dart';
 import 'package:crm_ui/server/server.dart';

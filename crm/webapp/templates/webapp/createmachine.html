@@ -4,26 +4,9 @@
 {% endblock header %}
 {% block page %}Create Machine{% endblock page %}
 {% block content %}
-<section class="container grid grid-cols-5 gap-4 my-4">
-    <a href="" class="text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
-        View Data
-    </a>
-    <a href="{% url 'localization_create' %}" class="text-center bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">
-        Create Data
-    </a>
-    <a href="" class="text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition">
-        Update Data
-    </a>
-    <a href="" class="text-center bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition">
-        Delete Data
-    </a>
-    <a href="" class="text-center bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
-        Export Data
-    </a>
-</section>
 
 
-<section class="bg-white shadow-md rounded-lg p-8 mb-10 w-full mx-auto">
+<section class="bg-gray-50 shadow-md rounded-lg p-8 mb-10 w-full mx-auto">
  
     <form action="{% url 'machine_create' %}" method="post" enctype="multipart/form-data" class="space-y-6">
         {% csrf_token %}
@@ -60,9 +43,9 @@
             </div>
         </div>
         <!-- Submit Button -->
-        <div class="text-center">
+        <div class="text-center w-full">
             <button type="submit" 
-                    class="bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-6 rounded-lg">
+                    class="bg-amber-500  text-black font-bold py-3 px-6 rounded-lg">
                 Save Machine
             </button>
         </div>

@@ -282,8 +282,9 @@ class Ticket(models.Model):
     source = models.ForeignKey(
         TicketSource, on_delete=models.SET_NULL, null=True, blank=True
     )
-
-
+    priority = models.ForeignKey(
+        TicketPriority, on_delete=models.SET_NULL, null=True, blank=True
+    )
     client = models.ForeignKey(
         "Client", on_delete=models.CASCADE, related_name="raised"
     )

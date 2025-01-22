@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from .chart import *
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 
@@ -68,6 +68,8 @@ def localization_create(request):
             client = form.save()
             client.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = LocalizationForm()
     return render(request, "webapp/localization_form.html", {"form": form})
@@ -88,6 +90,8 @@ def product_create(request):
             client = form.save()
             client.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = ProductForm()
     return render(request, "webapp/createproduct.html", {"form": form})
@@ -108,6 +112,8 @@ def machine_create(request):
             client = form.save()
             client.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = MachineForm()
     return render(request, "webapp/createmachine.html", {"form": form})
@@ -127,6 +133,8 @@ def ticket_create(request):
         if form.is_valid():
             form.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = TicketForm()
 
@@ -138,6 +146,7 @@ def ticket_create(request):
         "handlers": Client.objects.all(),
         "offices": Company.objects.all(),
         "machines": Machine.objects.all(),
+        "priority": TicketPriority.objects.all(),
     }
     return render(request, "webapp/createticket.html", context)
 
@@ -156,6 +165,8 @@ def create_order(request):
         if form.is_valid():
             form.save()
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = OrderForm()
 
@@ -200,6 +211,8 @@ def client_create(request):
             user.save()
             print("account created")
             return redirect("index")
+        else:
+            messages.error(request,f"{form.errors}")
     else:
         form = ClientForm()
     return render(request, "webapp/createclient.html", {"form": form})
