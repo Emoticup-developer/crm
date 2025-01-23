@@ -25,6 +25,9 @@ urlpatterns = [
     path("company_create", company_create, name="company_create"),
     path("location", location, name="location"),
     path("location_create", location_create, name="location_create"),
+    path("order_docs_create", order_docs_create, name="order_docs_create"),
+    path("ticket_docs_create", ticket_docs_create, name="ticket_docs_create"),
+    path("add_machine_attribute", add_machine_attribute, name="add_machine_attribute"),
     path("ratting", ratting, name="ratting"),
     
     ## All View function
@@ -58,8 +61,16 @@ urlpatterns = [
     path("download_ticket/update/download/csv/", download_ticket, name="download_ticket"),
     path("download_ratting/update/download/csv/", download_ratting, name="download_ratting"),
     path("download_product/update/download/csv/", download_product, name="download_product"),
-        path("download_company/update/download/csv/", download_company, name="download_company"),
+    path("download_company/update/download/csv/", download_company, name="download_company"),
     path("download_location/update/download/csv/", download_location, name="download_location"),
+    
+    
+    
+    
+    ##profile
+    path("profile", profile, name="profile"),
+    path("password_reset", password_reset, name="password_reset"),
+    
     
 
 ]

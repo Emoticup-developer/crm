@@ -239,6 +239,7 @@ def view_ticket(request, id):
         "webapp/view_ticket.html",
         context={
             "ticket": Ticket.objects.get(id=id),
+            "docs": TicketDocs.objects.filter(associated = Ticket.objects.get(id=id)).all(),
         },
     )
 
@@ -249,6 +250,8 @@ def view_order(request, id):
         "webapp/view_order.html",
         context={
             "order": Order.objects.get(id=id),
+            "docs": OrderDocs.objects.filter(associated = Order.objects.get(id=id)).all(),
+
         },
     )
 
@@ -269,6 +272,7 @@ def view_machine(request, id):
         "webapp/view_machine.html",
         context={
             "machine": Machine.objects.get(id=id),
+            "attributes":machine_attributes.objects.filter(associated=Machine.objects.get(id=id)).all()
         },
     )
 
@@ -318,16 +322,6 @@ def view_company(request, id):
 
 
 
-
-
-
-
-
-
-
-
-
-
 @login_required
 def company(request):
     clients = Company.objects.all()
@@ -367,3 +361,94 @@ def location_create(request):
     else:
         form = LocationForm()
     return render(request, "webapp/location_create.html", {"form": form})
+
+
+
+
+@login_required
+def profile(request):
+    return render(request,"webapp/profile.html",context={
+        "client":Client.objects.filter(username = request.user.username).first(),
+    })
+    
+    
+@login_required
+def password_reset(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            if new_password == confirm_password:
+                user.set_password(confirm_password)
+                messages.success(request,"password reset successfully ")
+                return redirect("profile")
+            else:
+                messages.error(request,"password not matching......")
+    return render(request,"webapp/reset.html")
+
+
+
+
+
+
+
+
+
+@login_required
+def order_docs_create(request):
+    if request.method == "POST":
+        form = OrderFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            client = form.save()
+            client.save()
+            return redirect("view_order",id=request.POST.get("associated"))
+        else:
+            messages.error(request,f"{form.errors}")
+    else:
+        form = OrderFileForm()
+    return render(request, "webapp/createmachine.html", {"form": form})
+
+
+
+
+
+
+@login_required
+def ticket_docs_create(request):
+    if request.method == "POST":
+        form = TicketFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            client = form.save()
+            client.save()
+            return redirect("view_ticket",id=request.POST.get("associated"))
+        else:
+            messages.error(request,f"{form.errors}")
+    else:
+        form = TicketFileForm()
+    return render(request, "webapp/createmachine.html", {"form": form})
+
+
+
+
+
+
+
+
+
+@login_required
+def add_machine_attribute(request):
+    if request.method == "POST":
+        form = MachineAttributesForm(request.POST, request.FILES)
+        if form.is_valid():
+            client = form.save()
+            client.save()
+            return redirect("view_machine",id=request.POST.get("associated"))
+        else:
+            messages.error(request,f"{form.errors}")
+    else:
+        form = MachineAttributesForm()
+    return render(request, "webapp/createmachine.html", {"form": form})
+

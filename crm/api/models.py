@@ -247,6 +247,17 @@ class Machine(models.Model):
         verbose_name_plural = "Machines"
 
 
+class machine_attributes(models.Model):
+    associated = models.ForeignKey(Machine,blank=False,on_delete=models.CASCADE,null=False)
+    title = models.TextField(blank=False,null=False)
+    value = models.TextField(blank=False,null=False)
+    created_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self(self.title)
+
+
+
 class TicketType(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=100)
@@ -316,6 +327,16 @@ class Ticket(models.Model):
 
 
 
+
+class TicketDocs(models.Model):
+    associated = models.ForeignKey(Ticket,on_delete=models.CASCADE, blank=False,null=False)
+    title = models.TextField(blank=False,null=False)
+    file = models.FileField(blank=False,name=False,upload_to="docs/")
+    created_at = models.DateTimeField(blank=False,auto_now=True)
+    
+    def __str__(self):
+        return str(self.title)
+
 class TopBarIcon(models.Model):
     title = models.TextField(blank=False,null=False)
     icon = models.ImageField(upload_to="icon/",blank=False,null=False)
@@ -382,7 +403,14 @@ class Order(models.Model):
         verbose_name_plural = "Orders"
 
 
-
+class OrderDocs(models.Model):
+    associated = models.ForeignKey(Order,on_delete=models.CASCADE, blank=False,null=False)
+    title = models.TextField(blank=False,null=False)
+    file = models.FileField(blank=False,name=False,upload_to="docs/")
+    created_at = models.DateTimeField(blank=False,auto_now=True)
+    
+    def __str__(self):
+        return str(self.title)
 
 
 

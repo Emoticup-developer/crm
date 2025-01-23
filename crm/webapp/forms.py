@@ -220,3 +220,23 @@ class LocalizationForm(forms.ModelForm):
     class Meta:
         model = Localization
         fields = "__all__"
+
+
+
+
+class TicketFileForm(forms.ModelForm):
+    class Meta:
+        model = TicketDocs
+        fields = "__all__"
+
+class OrderFileForm(forms.ModelForm):
+    class Meta:
+        model = OrderDocs
+        fields = "__all__"
+        
+
+class MachineAttributesForm(forms.ModelForm):
+    class Meta:
+        model = machine_attributes
+        fields = "__all__"
+
