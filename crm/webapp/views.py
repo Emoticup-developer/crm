@@ -13,16 +13,22 @@ from django.http import JsonResponse
 from django.contrib.auth import logout
 from django.http import JsonResponse
 
+
 def user_logout(request):
     logout(request)
 
     return redirect("login")
 
-@login_required(login_url='/login')
+
+@login_required(login_url="/login")
 def index(request):
     context = chart_view()
-    context["staff"] = Client.objects.filter(username__in=User.objects.filter(is_staff=True).values('username')).count()
-    context["clients"] = Client.objects.filter(username__in=User.objects.filter(is_staff=False).values('username')).count()
+    context["staff"] = Client.objects.filter(
+        username__in=User.objects.filter(is_staff=True).values("username")
+    ).count()
+    context["clients"] = Client.objects.filter(
+        username__in=User.objects.filter(is_staff=False).values("username")
+    ).count()
     context["total_user"] = Client.objects.all().count()
     context["product"] = Product.objects.all().count()
     context["machine"] = Machine.objects.all().count()
@@ -32,16 +38,15 @@ def index(request):
     return render(request, "webapp/index.html", context)
 
 
-
 def login_user(request):
-    if request.method != 'POST':
-        return render(request,"webapp/login.html")
+    if request.method != "POST":
+        return render(request, "webapp/login.html")
 
-    username = request.POST.get('username')
-    password = request.POST.get('password')
+    username = request.POST.get("username")
+    password = request.POST.get("password")
 
     if not username or not password:
-        return JsonResponse({'error': 'Username and password are required'}, status=400)
+        return JsonResponse({"error": "Username and password are required"}, status=400)
 
     user = authenticate(request, username=username, password=password)
 
@@ -49,7 +54,7 @@ def login_user(request):
         login(request, user)
         return redirect("index")
     else:
-        return JsonResponse({'error': 'Invalid credentials'}, status=401)
+        return JsonResponse({"error": "Invalid credentials"}, status=401)
 
 
 @login_required
@@ -57,8 +62,21 @@ def localization(request):
     return render(
         request,
         "webapp/localization.html",
-        context={"localizations": Localization.objects.all()},
+        context={
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+            "localizations": Localization.objects.all(),
+        },
     )
+
 
 @login_required
 def localization_create(request):
@@ -69,10 +87,11 @@ def localization_create(request):
             client.save()
             return redirect("index")
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = LocalizationForm()
     return render(request, "webapp/localization_form.html", {"form": form})
+
 
 @login_required
 def product(request):
@@ -81,6 +100,7 @@ def product(request):
         "webapp/product.html",
         context={"product": Product.objects.all()},
     )
+
 
 @login_required
 def product_create(request):
@@ -91,10 +111,11 @@ def product_create(request):
             client.save()
             return redirect("index")
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = ProductForm()
     return render(request, "webapp/createproduct.html", {"form": form})
+
 
 @login_required
 def machine(request):
@@ -103,6 +124,7 @@ def machine(request):
         "webapp/machine.html",
         context={"machine": Machine.objects.all()},
     )
+
 
 @login_required
 def machine_create(request):
@@ -113,10 +135,11 @@ def machine_create(request):
             client.save()
             return redirect("index")
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = MachineForm()
     return render(request, "webapp/createmachine.html", {"form": form})
+
 
 @login_required
 def ticket(request):
@@ -126,6 +149,7 @@ def ticket(request):
         context={"ticket": Ticket.objects.all()},
     )
 
+
 @login_required
 def ticket_create(request):
     if request.method == "POST":
@@ -134,7 +158,7 @@ def ticket_create(request):
             form.save()
             return redirect("index")
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = TicketForm()
 
@@ -150,6 +174,7 @@ def ticket_create(request):
     }
     return render(request, "webapp/createticket.html", context)
 
+
 @login_required
 def order(request):
     return render(
@@ -157,6 +182,7 @@ def order(request):
         "webapp/order.html",
         context={"orders": Order.objects.all()},
     )
+
 
 @login_required
 def create_order(request):
@@ -166,7 +192,7 @@ def create_order(request):
             form.save()
             return redirect("index")
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = OrderForm()
 
@@ -188,10 +214,12 @@ def create_order(request):
     }
     return render(request, "webapp/createorder.html", context)
 
+
 @login_required
 def client(request):
     clients = Client.objects.all()
     return render(request, "webapp/client.html", {"clients": clients})
+
 
 @login_required
 def client_create(request):
@@ -212,15 +240,17 @@ def client_create(request):
             print("account created")
             return redirect("index")
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = ClientForm()
     return render(request, "webapp/createclient.html", {"form": form})
+
 
 @login_required
 def ratting(request):
     clients = Rating.objects.all()
     return render(request, "webapp/ratting.html", {"ratting": clients})
+
 
 @login_required
 def view_ratting(request, id):
@@ -232,6 +262,7 @@ def view_ratting(request, id):
         },
     )
 
+
 @login_required
 def view_ticket(request, id):
     return render(
@@ -239,9 +270,12 @@ def view_ticket(request, id):
         "webapp/view_ticket.html",
         context={
             "ticket": Ticket.objects.get(id=id),
-            "docs": TicketDocs.objects.filter(associated = Ticket.objects.get(id=id)).all(),
+            "docs": TicketDocs.objects.filter(
+                associated=Ticket.objects.get(id=id)
+            ).all(),
         },
     )
+
 
 @login_required
 def view_order(request, id):
@@ -250,10 +284,10 @@ def view_order(request, id):
         "webapp/view_order.html",
         context={
             "order": Order.objects.get(id=id),
-            "docs": OrderDocs.objects.filter(associated = Order.objects.get(id=id)).all(),
-
+            "docs": OrderDocs.objects.filter(associated=Order.objects.get(id=id)).all(),
         },
     )
+
 
 @login_required
 def view_localization(request, id):
@@ -265,6 +299,7 @@ def view_localization(request, id):
         },
     )
 
+
 @login_required
 def view_machine(request, id):
     return render(
@@ -272,9 +307,12 @@ def view_machine(request, id):
         "webapp/view_machine.html",
         context={
             "machine": Machine.objects.get(id=id),
-            "attributes":machine_attributes.objects.filter(associated=Machine.objects.get(id=id)).all()
+            "attributes": machine_attributes.objects.filter(
+                associated=Machine.objects.get(id=id)
+            ).all(),
         },
     )
+
 
 @login_required
 def view_product(request, id):
@@ -285,6 +323,7 @@ def view_product(request, id):
             "product": Product.objects.get(id=id),
         },
     )
+
 
 @login_required
 def view_client(request, id):
@@ -297,8 +336,6 @@ def view_client(request, id):
     )
 
 
-
-
 @login_required
 def view_location(request, id):
     return render(
@@ -308,6 +345,7 @@ def view_location(request, id):
             "location": Location.objects.get(id=id),
         },
     )
+
 
 @login_required
 def view_company(request, id):
@@ -320,12 +358,11 @@ def view_company(request, id):
     )
 
 
-
-
 @login_required
 def company(request):
     clients = Company.objects.all()
     return render(request, "webapp/company.html", {"company": clients})
+
 
 @login_required
 def company_create(request):
@@ -343,12 +380,11 @@ def company_create(request):
     return render(request, "webapp/company_create.html", {"form": form})
 
 
-
-
 @login_required
 def location(request):
     clients = Location.objects.all()
     return render(request, "webapp/location.html", {"location": clients})
+
 
 @login_required
 def location_create(request):
@@ -363,38 +399,33 @@ def location_create(request):
     return render(request, "webapp/location_create.html", {"form": form})
 
 
-
-
 @login_required
 def profile(request):
-    return render(request,"webapp/profile.html",context={
-        "client":Client.objects.filter(username = request.user.username).first(),
-    })
-    
-    
+    return render(
+        request,
+        "webapp/profile.html",
+        context={
+            "client": Client.objects.filter(username=request.user.username).first(),
+        },
+    )
+
+
 @login_required
 def password_reset(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('old_password')
-        new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
+        username = request.POST.get("username")
+        password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
         user = authenticate(request, username=username, password=password)
         if user is not None:
             if new_password == confirm_password:
                 user.set_password(confirm_password)
-                messages.success(request,"password reset successfully ")
+                messages.success(request, "password reset successfully ")
                 return redirect("profile")
             else:
-                messages.error(request,"password not matching......")
-    return render(request,"webapp/reset.html")
-
-
-
-
-
-
-
+                messages.error(request, "password not matching......")
+    return render(request, "webapp/reset.html")
 
 
 @login_required
@@ -404,16 +435,12 @@ def order_docs_create(request):
         if form.is_valid():
             client = form.save()
             client.save()
-            return redirect("view_order",id=request.POST.get("associated"))
+            return redirect("view_order", id=request.POST.get("associated"))
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = OrderFileForm()
     return render(request, "webapp/createmachine.html", {"form": form})
-
-
-
-
 
 
 @login_required
@@ -423,19 +450,12 @@ def ticket_docs_create(request):
         if form.is_valid():
             client = form.save()
             client.save()
-            return redirect("view_ticket",id=request.POST.get("associated"))
+            return redirect("view_ticket", id=request.POST.get("associated"))
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = TicketFileForm()
     return render(request, "webapp/createmachine.html", {"form": form})
-
-
-
-
-
-
-
 
 
 @login_required
@@ -445,10 +465,9 @@ def add_machine_attribute(request):
         if form.is_valid():
             client = form.save()
             client.save()
-            return redirect("view_machine",id=request.POST.get("associated"))
+            return redirect("view_machine", id=request.POST.get("associated"))
         else:
-            messages.error(request,f"{form.errors}")
+            messages.error(request, f"{form.errors}")
     else:
         form = MachineAttributesForm()
     return render(request, "webapp/createmachine.html", {"form": form})
-
