@@ -8,8 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
-
-
+from django.conf import settings
+from cryptography.fernet import Fernet
 from django.contrib.auth import logout
 from django.http import JsonResponse
 
@@ -63,17 +63,19 @@ def localization(request):
         request,
         "webapp/localization.html",
         context={
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
-            "localizations": Localization.objects.all(),
+            "location": Location.objects.all(),
+            "normal_user" : Client.objects.filter(username__in=User.objects.filter(is_staff=False).values_list('username', flat=True)).count(),  
+            "staff":Client.objects.filter(username__in=User.objects.filter(is_staff=True).values_list('username', flat=True)).count(),
+            "tickettype": TicketType.objects.all().count(),
+            "ticketsource": TicketSource.objects.all().count(),
+            "TicketPriority": TicketPriority.objects.all().count(),
+            "TopBarIcon": TopBarIcon.objects.all().count(),
+            "SideBarIcon": SideBarIcon.objects.all().count(),
+            "OrderSource": OrderSource.objects.all().count(),
+            "Rating": Rating.objects.all().count(),
+            "Authorize": Authorize.objects.all().count(),
+            "Country": Country.objects.all().count(),
+            "State": State.objects.all().count(),
         },
     )
 
@@ -471,3 +473,25 @@ def add_machine_attribute(request):
     else:
         form = MachineAttributesForm()
     return render(request, "webapp/createmachine.html", {"form": form})
+
+
+def authorize(request):
+    if request.method == "POST":
+        shakey = Fernet.generate_key().decode("utf-8")
+        responce = render(
+            request,
+            "webapp/authorize.html",
+            context={
+                "key": shakey,
+            },
+        )
+        responce.set_cookie(
+            "secure_key",
+            shakey,
+            httponly=True,
+            secure=False,  # Set to False for local testing
+            samesite="Strict",
+            max_age=60 * 60 * 24 * 60,
+        )
+        return responce
+    return render(request, "webapp/authorize.html")

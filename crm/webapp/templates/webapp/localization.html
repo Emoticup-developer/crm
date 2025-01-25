@@ -2,62 +2,83 @@
 
 {% block header %}
 {% endblock header %}
+
 {% block page %}Localization{% endblock page %}
 
 {% block content %}
-<section class="container grid grid-cols-5 gap-4 my-4">
-    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
-        View Data
-    </a>
-    <a href="{% url 'localization_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
-        Create Data
-    </a>
-
-    <a href="{% url 'download_localization' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
-        Download Excel 
-    </a>
-</section>
-
 <div class="bg-white shadow rounded-lg p-6">
-
     <table class="min-w-full border-collapse border border-gray-300">
         <thead class="bg-gray-100">
             <tr>
                 <th class="border border-gray-300 px-4 py-2 text-left">#</th>
-                <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
-                <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
-      
-                <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
-                <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Category</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Count</th>
             </tr>
         </thead>
         <tbody>
-            {% for localization in localizations %}
+       
             <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
-                <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
-                <td class="border border-gray-300 px-4 py-2">
-                    <a href="{% url 'view_localization' id=localization.id %}">  {{ localization.name }}</a>
-                    
-                  </td>
-                <td class="border border-gray-300 px-4 py-2">{{ localization.description }}</td>
-            
-                <td class="border border-gray-300 px-4 py-2">
-                    {% if localization.status %}
-                    <span class="text-green-500 font-bold">Active</span>
-                    {% else %}
-                    <span class="text-red-500 font-bold">Inactive</span>
-                    {% endif %}
+                <td class="border border-gray-300 px-4 py-2">3</td>
+                <td class="border border-gray-300 px-4 py-2 text-lg font-bold text-blue-600 hover:underline">
+                    <a href="{% url 'add_ticket' %}">Ticket Types</a>
                 </td>
-                <td class="border border-gray-300 px-4 py-2">
-                    <a href="#" class="text-blue-500 hover:underline">Edit</a> |
-                    <a href="#" class="text-red-500 hover:underline">Delete</a>
+                <td class="border border-gray-300 px-4 py-2">{{ tickettype }}</td>
+            </tr>
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">4</td>
+                <td class="border border-gray-300 px-4 py-2 text-lg font-bold text-blue-600 hover:underline">
+                    <a href="{% url 'ticket_source' %}">Ticket Sources</a>
                 </td>
+                <td class="border border-gray-300 px-4 py-2">{{ ticketsource }}</td>
             </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6" class="text-center text-gray-500 py-4">No data available</td>
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">5</td>
+                <td class="border border-gray-300 px-4 py-2 text-lg font-bold text-blue-600 hover:underline">
+                    <a href="{% url 'ticket_priorities' %}">Ticket Priorities</a>
+                </td>
+                <td class="border border-gray-300 px-4 py-2">{{ TicketPriority }}</td>
             </tr>
-            {% endfor %}
+          
+
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">8</td>
+                <td class="border border-gray-300 px-4 py-2 text-lg font-bold text-blue-600 hover:underline">
+                    <a href="{% url "order_source" %}">Order Source</a>
+                </td>
+                <td class="border border-gray-300 px-4 py-2">{{ OrderSource }}</td>
+            </tr>
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">9</td>
+                <td class="border border-gray-300 px-4 py-2 text-lg font-bold text-blue-600 hover:underline">
+                    <a href="{% url 'country' %}">Country</a>
+                </td>
+                <td class="border border-gray-300 px-4 py-2">{{ Country }}</td>
+            </tr>
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">10</td>
+                <td class="border border-gray-300 px-4 py-2 text-lg font-bold text-blue-600 hover:underline">
+                    <a href="{% url 'states' %}">State</a>
+                </td>
+                <td class="border border-gray-300 px-4 py-2">{{ State }}</td>
+            </tr>
+
+
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">10</td>
+                <td class="border border-gray-300 px-4 py-2 text-lg font-bold text-blue-600 hover:underline">
+                    <a href="{% url 'order_status' %}">Order Status</a>
+                </td>
+                <td class="border border-gray-300 px-4 py-2">{{ State }}</td>
+            </tr>
+
+
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">10</td>
+                <td class="border border-gray-300 px-4 py-2 text-lg font-bold text-blue-600 hover:underline">
+                    <a href="{% url 'ticket_stats' %}">Ticket Status</a>
+                </td>
+                <td class="border border-gray-300 px-4 py-2">{{ State }}</td>
+            </tr>
         </tbody>
     </table>
 </div>

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "api",
     "webapp",
+    'addon',
+    "widget_tweaks"
     
 ]
 
@@ -69,6 +71,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "webapp.middleware.DeviceAuthorizationMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

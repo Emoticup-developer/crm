@@ -1,0 +1,49 @@
+
+
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block page %}Add Tickets{% endblock page %}
+
+{% block content %}
+
+
+<section class="grid grid-cols-4 space-x-4">
+    <a href="{% url 'order_status_from' %}" class="grid-cols-1 rounded-xl border border-black py-2 px-4 font-bold text-center bg-white my-3">Add One</a>
+ </section>
+
+
+ 
+<div class="bg-white shadow rounded-lg p-6">
+    <table class="min-w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Status Name </th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Created On </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for source in order_status %}
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ source.status }}</td>
+                <td class="border border-gray-300 px-4 py-2">
+                    {{ source.created_at|default:"N/A" }}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center text-gray-500 py-4">No order sources available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock content %}
+
+

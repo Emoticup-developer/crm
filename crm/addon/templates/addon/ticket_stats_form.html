@@ -1,0 +1,49 @@
+
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block page %}Add Tickets Status{% endblock page %}
+
+{% block content %}
+<section class="grid grid-cols-4 space-x-4">
+    <a href="{% url "order_source_form" %}" class="grid-cols-1 rounded-xl border border-black py-2 px-4 font-bold text-center bg-white my-3">Add One</a>
+ </section>
+
+ <div class="w-full bg-gray-50 flex items-center justify-center p-4">
+    <div class=" w-2/4 bg-white rounded-lg shadow-md p-6">
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label for="id_name" class="block text-sm font-medium text-gray-700">Status Name</label>
+                <input
+                    type="text"
+                    name="status"
+                    id="status"
+                    class="mt-1 block w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    placeholder="Enter order source name"
+                >
+                {% if form.name.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.status.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+        
+            
+            <div class="flex justify-end">
+                <button
+                    type="submit"
+                    class="h-10 px-6 bg-amber-600 text-black font-semibold rounded-md shadow-md  focus:outline-none focus:ring-2  focus:ring-offset-2"
+                >
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock content %}
+

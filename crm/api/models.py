@@ -10,6 +10,26 @@ from django.core.validators import (
 import uuid
 
 
+
+
+class OrderStatus(models.Model):
+    status = models.TextField(blank=False,null=False)
+    created_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return str(self.status)
+    
+    
+    
+class TicketStatus(models.Model):
+    status = models.TextField(blank=False,null=False)
+    created_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return str(self.status)
+    
+    
+    
 class Company(models.Model):
     company_name = models.CharField(
         max_length=150, unique=True
@@ -105,7 +125,6 @@ class Client(models.Model):
         ("Male", "Male"),
         ("Female", "Female"),
     ]
-
     STATUS_CHOICES = [
         ("Active", "Active"),
         ("Inactive", "Inactive"),
@@ -258,6 +277,8 @@ class machine_attributes(models.Model):
 
 
 
+
+
 class TicketType(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=100)
@@ -315,6 +336,7 @@ class Ticket(models.Model):
     video = models.FileField(upload_to="ticket_videos/", blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now=True)
+    status = models.ForeignKey(TicketStatus,on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
         return f"Ticket {self.ticket_id} - {self.subject}"
     
@@ -376,6 +398,7 @@ class Order(models.Model):
     order_date = models.DateField(auto_now=True)
     source = models.ForeignKey(OrderSource, on_delete=models.SET_NULL, null=True, blank=True)
     po_number = models.CharField(max_length=100, blank=True, null=True)
+    dc_number = models.CharField(max_length=100, blank=True, null=True)
     additional_note = models.TextField(blank=True, null=True)
 
     # Client Information
@@ -393,8 +416,9 @@ class Order(models.Model):
 
     # Order Status
     created_at = models.DateTimeField(auto_now_add=True)
+    on_hold = models.BooleanField(default=False,null=True,blank=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    status = models.ForeignKey(OrderStatus,on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
         return f"Order {self.order_id}"
 
@@ -440,3 +464,41 @@ class Rating(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        
+        
+class Authorize(models.Model):
+    key = models.TextField(blank=False, null=False, unique=True)  
+    date = models.DateTimeField(auto_now_add=True) 
+    request = models.TextField(blank=False,null=False)  
+
+    def __str__(self):
+        return str(self.key)
+
+    @classmethod
+    def checkout(cls, keys):
+        try:
+            return cls.objects.get(key=keys)
+        except cls.DoesNotExist:
+            return None  
+        
+        
+class Country(models.Model):
+    country = models.TextField(blank=False,null=False)
+    created_at = models.DateTimeField(blank=False,null=False,auto_now=True)
+    
+    def __str__(self):
+        return str(self.country)
+
+
+class State(models.Model):
+    country = models.ForeignKey(Country,on_delete=models.CASCADE)
+    state = models.TextField(blank=False,null=False)
+    created_at = models.DateTimeField(blank=False,null=False,auto_now=True)
+    
+    def __str__(self):
+        return str(self.country)
+    
+    
+    
+    
+    

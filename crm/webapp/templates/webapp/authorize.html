@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>authorize</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function copyToClipboard() {
+            const keyText = document.getElementById('keyText');
+            keyText.select();
+            document.execCommand('copy');
+            alert("Key copied to clipboard!");
+        }
+    </script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+    <div class="bg-white p-10 rounded-lg shadow-lg max-w-3xl w-full space-y-6 overflow-hidden">
+        {% if key %}
+            <div class="relative">
+                <input type="text" id="keyText" value="{{ key }}" class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg" readonly>
+                <button onclick="copyToClipboard()" class="absolute top-3 right-3 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg">Copy</button>
+            </div>
+        {% else %}
+            <form action="{% url 'authorize' %}" method="post">
+                <!-- CSRF Token for Django -->
+                {% csrf_token %}
+                <button type="submit" class="w-full py-3 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 text-xl">Create Key</button>
+            </form>
+        {% endif %}
+    </div>
+
+</body>
+</html>

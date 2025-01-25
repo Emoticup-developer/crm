@@ -1,0 +1,62 @@
+
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block page %}Add Tickets{% endblock page %}
+
+{% block content %}
+<section class="grid grid-cols-4 space-x-4">
+    <a href="{% url "ticket_source_form" %}" class="grid-cols-1 rounded-xl border border-black py-2 px-4 font-bold text-center bg-white my-3">Add One</a>
+ </section>
+
+ <div class="w-full bg-gray-50 flex items-center justify-center p-4">
+    <div class=" w-2/4 bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Add Ticket Source</h1>
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label for="id_name" class="block text-sm font-medium text-gray-700">Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    id="id_name"
+                    class="mt-1 block w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    placeholder="Enter source name"
+                >
+                {% if form.name.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="id_description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea
+                    name="description"
+                    id="id_description"
+                    rows="4"
+                    class="mt-1 block w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm resize-none"
+                    placeholder="Enter source description"
+                ></textarea>
+                {% if form.description.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.description.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="flex justify-end">
+                <button
+                    type="submit"
+                    class="h-10 px-6 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock content %}
+

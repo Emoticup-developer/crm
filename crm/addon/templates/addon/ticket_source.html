@@ -1,0 +1,45 @@
+
+{% extends "webapp/base.html" %}
+
+{% block header %}
+{% endblock header %}
+
+{% block page %}Add Tickets{% endblock page %}
+
+{% block content %}
+<section class="grid grid-cols-4 space-x-4">
+    <a href="{% url "ticket_source_form" %}" class="grid-cols-1 rounded-xl border border-black py-2 px-4 font-bold text-center bg-white my-3">Add One</a>
+ </section>
+
+
+
+<div class="bg-white shadow rounded-lg p-6">
+    <table class="min-w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for source in ticket_sources %}
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ source.name }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ source.description }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ source.created_at }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-gray-500 py-4">No ticket sources available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock content %}
+

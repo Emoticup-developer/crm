@@ -70,7 +70,7 @@ urlpatterns = [
     ##profile
     path("profile", profile, name="profile"),
     path("password_reset", password_reset, name="password_reset"),
+    path("authorize", authorize, name="authorize"),
     
     
-
 ]
