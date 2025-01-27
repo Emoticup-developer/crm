@@ -1,5 +1,5 @@
 {% extends "webapp/base.html" %}
-
+{% load static %}
 {% block header %}
 {% endblock header %}
 
@@ -10,12 +10,30 @@
     <a href="" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         View Data
     </a>
+
+
+
+
+    {% if not user.is_superuser and not user.is_staff %}
+ 
+    {% else  %}
     <a href="{% url 'company_create' %}" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Create Data
     </a>
+    {% endif %}
+
+
+
     <a href="{% url 'download_company' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Download Excel 
     </a>
+
+    {% if user.is_superuser  %}
+
+    <a href="{% url 'company_trash' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Trash Items 
+    </a>
+    {% endif %}
 </section>
 
 
@@ -29,6 +47,11 @@
                 <th class="border border-gray-300 px-4 py-2 text-left">Email</th>
     
                 <th class="border border-gray-300 px-4 py-2 text-left">Location</th>
+
+                {% if user.is_superuser  %}
+                <th class="border border-gray-300 px-4 py-2 text-left">Trash</th>
+            {% endif %}
+
          
             </tr>
         </thead>
@@ -36,14 +59,41 @@
             {% for client in company %}
             <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
                 <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
-                <td class="border border-gray-300 px-4 py-2">
-                    <a href="{% url 'view_company' id=client.id %}">{{ client.company_name }}</a>
-                    </td>
+
+
+
+   
+
+
+                    {% if not user.is_superuser and not user.is_staff %}
+
+
+                    <td class="border border-gray-300 px-4 py-2">
+                        <a href="#">{{ client.company_name }}</a>
+                        </td>
+    
+                
+                    {% else  %}
+                
+                
+                    <td class="border border-gray-300 px-4 py-2">
+                        <a href="{% url 'view_company' id=client.id %}">{{ client.company_name }}</a>
+                        </td>
+    
+                    {% endif %}
+
+
+
 
                     <td class="border border-gray-300 px-4 py-2">{{ client.company_mobile_no }}</td>
                 <td class="border border-gray-300 px-4 py-2">{{ client.company_email }}</td>
         
                 <td class="border border-gray-300 px-4 py-2">{{ client.location }}</td>
+
+                {% if user.is_superuser  %}
+                <td class="border border-gray-300 px-4 py-2"><a href="{% url 'delete_company' id=client.id %}"><img class="w-6 h-6 object-contain" src="{% static 'webapp/trash.png' %}" alt=""></a></td>
+            {% endif %}
+
             </tr>
             {% empty %}
             <tr>

@@ -6,7 +6,7 @@
 
 {% block content %}
 <section class="container grid grid-cols-5 gap-4 my-4">
-    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+    <a href="{% url 'generate_pdf_machine' id=machine.id %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Download
     </a>
     <button id="add_file"

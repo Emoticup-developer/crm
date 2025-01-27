@@ -6,153 +6,156 @@
 
 {% block content %}
 <section class="container grid grid-cols-5 gap-4 my-4">
-    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+    <a href="" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Download
     </a>
-    <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+    <a href="{% url 'ticket_create' %}" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         PlaceHolder
     </a>
-    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+    <a href="" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Update Data
     </a>
-
 </section>
 
-<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
-    <h1 class="text-2xl font-bold mb-6 text-center">Update Ticket</h1>
-    <form  method="POST" enctype="multipart/form-data">
+<div class="bg-gray-200 p-8 rounded-lg shadow-lg w-full max-w-7xl">
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
         {% csrf_token %}
 
-        <!-- Ticket ID -->
-        <div class="mb-4">
-            <label for="ticket_id" class="block text-sm font-medium text-gray-700">Ticket ID</label>
-            <input type="text" name="ticket_id" id="ticket_id" value="{{ form.ticket_id.value|default:'' }}" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Ticket Type -->
+            <div class="h-24">
+                <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+                <select name="type" id="type" 
+                    class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Type</option>
+                    {% for option in form.type.field.queryset %}
+                        <option value="{{ option.id }}" {% if option.id == form.type.value %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Ticket Source -->
+            <div class="h-24">
+                <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
+                <select name="source" id="source" 
+                    class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Source</option>
+                    {% for option in form.source.field.queryset %}
+                        <option value="{{ option.id }}" {% if option.id == form.source.value %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Client -->
+            <div class="h-24">
+                <label for="client" class="block text-sm font-medium text-gray-700">Client</label>
+                <select name="client" id="client" 
+                    class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Client</option>
+                    {% for option in form.client.field.queryset %}
+                        <option value="{{ option.id }}" {% if option.id == form.client.value %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Handled By -->
+            <div class="h-24">
+                <label for="handled_by" class="block text-sm font-medium text-gray-700">Handled By</label>
+                <select name="handled_by" id="handled_by" 
+                    class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Employee</option>
+                    {% for option in form.handled_by.field.queryset %}
+                        <option value="{{ option.id }}" {% if option.id == form.handled_by.value %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
 
-        <!-- Ticket Type -->
-        <div class="mb-4">
-            <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-            <select name="type" id="type" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="" disabled selected>Select Type</option>
-                {% for option in form.type.field.queryset %}
-                    <option value="{{ option.id }}" {% if option.id == form.type.value %}selected{% endif %}>{{ option }}</option>
-                {% endfor %}
-            </select>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    
+            <!-- Office -->
+            <div class="h-24">
+                <label for="office" class="block text-sm font-medium text-gray-700">Office</label>
+                <select name="office" id="office" 
+                    class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Office</option>
+                    {% for option in form.office.field.queryset %}
+                        <option value="{{ option.id }}" {% if option.id == form.office.value %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+
+
+            <!-- Machine -->
+            <div class="h-24">
+                <label for="machine" class="block text-sm font-medium text-gray-700">Machine</label>
+                <select name="machine" id="machine" 
+                    class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Machine</option>
+                    {% for option in form.machine.field.queryset %}
+                        <option value="{{ option.id }}" {% if option.id == form.machine.value %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Subject -->
+            <div class="h-24">
+                <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
+                <input type="text" name="subject" id="subject" value="{{ form.subject.value|default:'' }}" 
+                    class="mt-1 block w-full h-10 bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+               <!-- Additional Information -->
+               <div class="h-24">
+                <label for="additional_information" class="block text-sm font-medium text-gray-700">Additional Information</label>
+                <textarea name="additional_information" id="additional_information" rows="4" 
+                    class="mt-1 block w-full h-full bg-white rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ form.additional_information.value|default:'' }}</textarea>
+            </div>
         </div>
 
-        <!-- Ticket Source -->
-        <div class="mb-4">
-            <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
-            <select name="source" id="source" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="" disabled selected>Select Source</option>
-                {% for option in form.source.field.queryset %}
-                    <option value="{{ option.id }}" {% if option.id == form.source.value %}selected{% endif %}>{{ option }}</option>
-                {% endfor %}
-            </select>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+         
+
+            <!-- Photo -->
+            <div class="h-24">
+                <label for="photo" class="block text-sm font-medium text-gray-700">Photo</label>
+                {% if ticket.photo %}
+                    <img src="{{ ticket.photo.url }}" alt="Current Photo" class="mb-2 h-20 w-20 object-cover rounded">
+                {% endif %}
+                <input type="file" name="photo" id="photo" 
+                    class="mt-1 block w-full text-sm bg-white text-gray-600 border border-gray-300 rounded-md cursor-pointer focus:outline-none">
+            </div>
+
+            <!-- Video -->
+            <div class="h-24">
+                <label for="video" class="block text-sm font-medium text-gray-700">Video</label>
+                {% if ticket.video %}
+                    <video controls class="mb-2 w-full rounded">
+                        <source src="{{ ticket.video.url }}" type="video/mp4">
+                    </video>
+                {% endif %}
+                <input type="file" name="video" id="video" 
+                    class="mt-1 block w-full text-sm bg-white text-gray-600 border border-gray-300 rounded-md cursor-pointer focus:outline-none">
+            </div>
         </div>
 
-        <!-- Client -->
-        <div class="mb-4">
-            <label for="client" class="block text-sm font-medium text-gray-700">Client</label>
-            <select name="client" id="client" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="" disabled selected>Select Client</option>
-                {% for option in form.client.field.queryset %}
-                    <option value="{{ option.id }}" {% if option.id == form.client.value %}selected{% endif %}>{{ option }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Handled By -->
-        <div class="mb-4">
-            <label for="handled_by" class="block text-sm font-medium text-gray-700">Handled By</label>
-            <select name="handled_by" id="handled_by" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="" disabled selected>Select Employee</option>
-                {% for option in form.handled_by.field.queryset %}
-                    <option value="{{ option.id }}" {% if option.id == form.handled_by.value %}selected{% endif %}>{{ option }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Email/SMS Notification -->
-        <div class="mb-4">
-            <label for="email_sms_notification" class="block text-sm font-medium text-gray-700">Email/SMS Notification</label>
-            <input type="checkbox" name="email_sms_notification" id="email_sms_notification" 
-                {% if form.email_sms_notification.value %}checked{% endif %}
-                class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-        </div>
-
-        <!-- Office -->
-        <div class="mb-4">
-            <label for="office" class="block text-sm font-medium text-gray-700">Office</label>
-            <select name="office" id="office" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="" disabled selected>Select Office</option>
-                {% for option in form.office.field.queryset %}
-                    <option value="{{ option.id }}" {% if option.id == form.office.value %}selected{% endif %}>{{ option }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Machine -->
-        <div class="mb-4">
-            <label for="machine" class="block text-sm font-medium text-gray-700">Machine</label>
-            <select name="machine" id="machine" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="" disabled selected>Select Machine</option>
-                {% for option in form.machine.field.queryset %}
-                    <option value="{{ option.id }}" {% if option.id == form.machine.value %}selected{% endif %}>{{ option }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Subject -->
-        <div class="mb-4">
-            <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
-            <input type="text" name="subject" id="subject" value="{{ form.subject.value|default:'' }}" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-        </div>
-
-        <!-- Additional Information -->
-        <div class="mb-4">
-            <label for="additional_information" class="block text-sm font-medium text-gray-700">Additional Information</label>
-            <textarea name="additional_information" id="additional_information" rows="4" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ form.additional_information.value|default:'' }}</textarea>
-        </div>
-
-        <!-- Photo -->
-        <div class="mb-4">
-            <label for="photo" class="block text-sm font-medium text-gray-700">Photo</label>
-            {% if ticket.photo %}
-                <img src="{{ ticket.photo.url }}" alt="Current Photo" class="mb-2 h-20 w-20 object-cover rounded">
-            {% endif %}
-            <input type="file" name="photo" id="photo" 
-                class="mt-1 block w-full text-sm text-gray-600 border border-gray-300 rounded-md cursor-pointer focus:outline-none">
-        </div>
-
-        <!-- Video -->
-        <div class="mb-4">
-            <label for="video" class="block text-sm font-medium text-gray-700">Video</label>
-            {% if ticket.video %}
-                <video controls class="mb-2 w-full rounded">
-                    <source src="{{ ticket.video.url }}" type="video/mp4">
-                </video>
-            {% endif %}
-            <input type="file" name="video" id="video" 
-                class="mt-1 block w-full text-sm text-gray-600 border border-gray-300 rounded-md cursor-pointer focus:outline-none">
-        </div>
+                <!-- Email/SMS Notification -->
+                <div class="h-24 flex items-center">
+                    <label for="email_sms_notification" class="block text-sm font-medium text-gray-700">Email/SMS Notification</label>
+                    <input type="checkbox" name="email_sms_notification" id="email_sms_notification" 
+                        {% if form.email_sms_notification.value %}checked{% endif %}
+                        class="ml-2 h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                </div>
+    
 
         <!-- Submit Button -->
-        <div class="mt-6">
+        <div class="mt-6 my-3">
             <button type="submit" 
-                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Update Ticket</button>
+                class="w-full bg-amber-600 text-black py-2 px-4 rounded-md hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Update Ticket</button>
         </div>
     </form>
 </div>
-
 
 {% endblock content %}

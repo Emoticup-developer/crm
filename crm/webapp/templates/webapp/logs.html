@@ -1,0 +1,45 @@
+{% extends "webapp/base.html" %}
+{% load static %}
+{% block header %}
+{% endblock header %}
+{% block page %}Logs and History{% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    <a href="{% url 'download_logs' %}" class="text-center bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Download Excel
+    </a>
+</section>
+
+<div class="bg-white shadow rounded-lg p-6">
+    <table class="min-w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">User</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">IP Address</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Location</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Method</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ log.user }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ log.ip }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ log.location }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ log.method }}</td>
+
+       
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center border border-gray-300 px-4 py-2">No logs available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

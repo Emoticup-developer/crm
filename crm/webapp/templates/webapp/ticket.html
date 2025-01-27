@@ -1,5 +1,6 @@
 {% extends "webapp/base.html" %}
-
+{% load widget_tweaks %}
+{% load static %}
 {% block header %}
 {% endblock header %}
 {% block page %}Tickets{% endblock page %}
@@ -9,13 +10,95 @@
     <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         View Data
     </a>
+
+
+
+
+
+
+
+    {% if not user.is_superuser and not user.is_staff %}
+ 
+    {% else  %}
     <a href="{% url 'ticket_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Create Data
     </a>
+    {% endif %}
+
+
+
+
+
+
+
     <a href="{% url 'download_ticket' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Download Excel 
     </a>
+    <button type="button" id="filter" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Add Filter 
+    </button>
+
+
+    {% if user.is_superuser  %}
+
+    <a href="{% url 'ticket_trash' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Trash Items 
+    </a>
+    {% endif %}
+
 </section>
+
+
+
+<form id="filter_form" method="get" action="{% url 'ticket_list' %}" class="w-full hidden space-y-6 p-6 rounded-lg shadow-lg bg-white mx-auto">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Ticket ID -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_ticket_id" class="text-lg font-semibold text-gray-700">Ticket ID</label>
+            {% render_field filter.form.ticket_id class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter Ticket ID" %}
+        </div>
+        
+        <!-- Type -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_type" class="text-lg font-semibold text-gray-700">Type</label>
+            {% render_field filter.form.type class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+
+        <!-- Source -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_source" class="text-lg font-semibold text-gray-700">Source</label>
+            {% render_field filter.form.source class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+
+        <!-- Priority -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_priority" class="text-lg font-semibold text-gray-700">Priority</label>
+            {% render_field filter.form.priority class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+
+        <!-- Status -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_status" class="text-lg font-semibold text-gray-700">Status</label>
+            {% render_field filter.form.status class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+
+        <!-- Created Between -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_created_at" class="text-lg font-semibold text-gray-700">Created Between</label>
+            {% render_field filter.form.created_at class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+    </div>
+
+    <div class="flex flex-col space-y-2">
+        <button type="submit" class="w-full bg-amber-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-green-500">
+            Filter
+        </button>
+    </div>
+</form>
+
+
+
 
 <div class="bg-white shadow rounded-lg p-6">
 
@@ -31,14 +114,41 @@
 
 
                 <th class="border border-gray-300 px-4 py-2 text-left">Machine Name</th>
+
+                
+                {% if user.is_superuser  %}
+                <th class="border border-gray-300 px-4 py-2 text-left">Trash</th>
+            {% endif %}
             </tr>
         </thead>
         <tbody>
             {% for localization in ticket %}
             <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
                 <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
-                <td class="border border-gray-300 px-4 py-2">
-                    <a href="{% url 'view_ticket' id=localization.id  %}"> {{ localization.ticket_id }}</a></td>
+
+
+
+
+                                
+    {% if not user.is_superuser and not user.is_staff %}
+
+
+    <td class="border border-gray-300 px-4 py-2">
+        <a href="#"> {{ localization.ticket_id }}</a></td>
+
+    {% else  %}
+
+
+ 
+    <td class="border border-gray-300 px-4 py-2">
+        <a href="{% url 'view_ticket' id=localization.id  %}"> {{ localization.ticket_id }}</a></td>
+
+
+    {% endif %}
+
+
+
+
                 <td class="border border-gray-300 px-4 py-2">{{ localization.type }}</td>
              
  
@@ -48,6 +158,9 @@
 
 
 
+                {% if user.is_superuser  %}
+                <td class="border border-gray-300 px-4 py-2"><a href="{% url 'delete_ticket' id=localization.id %}"><img class="w-6 h-6 object-contain" src="{% static 'webapp/trash.png' %}" alt=""></a></td>
+            {% endif %}
 
 
             </tr>
@@ -59,4 +172,16 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    document.getElementById("filter").addEventListener("click", () => {
+        const filterForm = document.getElementById("filter_form");
+        if (filterForm.style.display === "block") {
+            filterForm.style.display = "none";
+        } else {
+            filterForm.style.display = "block";
+        }
+    });
+</script>
+
 {% endblock content %}

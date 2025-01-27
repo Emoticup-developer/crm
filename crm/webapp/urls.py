@@ -7,6 +7,7 @@ from .csv import *
 urlpatterns = [
 
     path("", index, name="index"),
+    path("logs", logs, name="logs"),
     path("login", login_user, name="login"),
     path("user_logout", user_logout, name="user_logout"),
     path("localization", localization, name="localization"),
@@ -63,6 +64,7 @@ urlpatterns = [
     path("download_product/update/download/csv/", download_product, name="download_product"),
     path("download_company/update/download/csv/", download_company, name="download_company"),
     path("download_location/update/download/csv/", download_location, name="download_location"),
+    path("download_logs/update/download/csv/", download_logs, name="download_logs"),
     
     
     

@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from openpyxl import Workbook
 from api.models import *
-
+from .models import LogsAndHistory
 from django.http import HttpResponse
 from openpyxl import Workbook
 from datetime import datetime
@@ -21,7 +21,6 @@ def download_queryset_as_excel(request, queryset):
     # Add headers
     sheet.append(field_names)
 
-    # Add data rows
     for obj in queryset:
         row = []
         for field in field_names:
@@ -51,6 +50,7 @@ def download_queryset_as_excel(request, queryset):
     )
     response["Content-Disposition"] = f'attachment; filename="{model.__name__.lower()}_data.xlsx"'
     workbook.save(response)
+    LogsAndHistory.objects.all().delete()
     return response
 
 
@@ -90,3 +90,7 @@ def download_company(request):
 
 def download_location(request):
     return download_queryset_as_excel(request,Location.objects.all())
+
+
+def download_logs(request):
+    return download_queryset_as_excel(request,LogsAndHistory.objects.all())

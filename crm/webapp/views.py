@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from api.models import *
+from addon.filter import *
 from .forms import *
 from django.shortcuts import redirect
 from .chart import *
@@ -12,7 +13,7 @@ from django.conf import settings
 from cryptography.fernet import Fernet
 from django.contrib.auth import logout
 from django.http import JsonResponse
-
+from .models import LogsAndHistory
 
 def user_logout(request):
     logout(request)
@@ -58,6 +59,17 @@ def login_user(request):
 
 
 @login_required
+def logs(request):
+    return render(
+        request,
+        "webapp/logs.html",
+        context={"logs": LogsAndHistory.objects.order_by("-id").all()},
+    )
+
+
+
+
+@login_required
 def localization(request):
     return render(
         request,
@@ -100,7 +112,7 @@ def product(request):
     return render(
         request,
         "webapp/product.html",
-        context={"product": Product.objects.all()},
+        context={"product": Product.objects.filter(trash = False).all()},
     )
 
 
@@ -124,7 +136,7 @@ def machine(request):
     return render(
         request,
         "webapp/machine.html",
-        context={"machine": Machine.objects.all()},
+        context={"machine": Machine.objects.filter(trash = False).all()},
     )
 
 
@@ -145,10 +157,12 @@ def machine_create(request):
 
 @login_required
 def ticket(request):
+    filter_set = TicketFilter(request.GET, queryset=Ticket.objects.all())
+    tickets = filter_set.qs 
     return render(
         request,
         "webapp/ticket.html",
-        context={"ticket": Ticket.objects.all()},
+        context={"ticket": Ticket.objects.filter(trash = False).all(),"filter":filter_set},
     )
 
 
@@ -179,10 +193,12 @@ def ticket_create(request):
 
 @login_required
 def order(request):
+    filter_set = OrderFilter(request.GET, queryset=Order.objects.all())
+    orders = filter_set.qs 
     return render(
         request,
         "webapp/order.html",
-        context={"orders": Order.objects.all()},
+        context={"orders": Order.objects.filter(trash = False).all(),"filter":filter_set},
     )
 
 
@@ -199,11 +215,11 @@ def create_order(request):
         form = OrderForm()
 
     sources = OrderSource.objects.all()
-    clients = Client.objects.all()
-    offices = Company.objects.all()
-    machines = Machine.objects.all()
-    products = Product.objects.all()
-    handlers = Client.objects.all()
+    clients = Client.objects.filter(trash = False).all()
+    offices = Company.objects.filter(trash = False).all()
+    machines = Machine.objects.filter(trash = False).all()
+    products = Product.objects.filter(trash = False).all()
+    handlers = Client.objects.filter(trash = False).all()
 
     context = {
         "form": form,
@@ -219,7 +235,7 @@ def create_order(request):
 
 @login_required
 def client(request):
-    clients = Client.objects.all()
+    clients = Client.objects.filter(trash = False).all()
     return render(request, "webapp/client.html", {"clients": clients})
 
 
@@ -250,7 +266,7 @@ def client_create(request):
 
 @login_required
 def ratting(request):
-    clients = Rating.objects.all()
+    clients = Rating.objects.filter(trash = False).all()
     return render(request, "webapp/ratting.html", {"ratting": clients})
 
 
@@ -362,7 +378,7 @@ def view_company(request, id):
 
 @login_required
 def company(request):
-    clients = Company.objects.all()
+    clients = Company.objects.filter(trash = False).all()
     return render(request, "webapp/company.html", {"company": clients})
 
 
@@ -384,7 +400,7 @@ def company_create(request):
 
 @login_required
 def location(request):
-    clients = Location.objects.all()
+    clients = Location.objects.filter(trash = False).all()
     return render(request, "webapp/location.html", {"location": clients})
 
 
@@ -407,7 +423,7 @@ def profile(request):
         request,
         "webapp/profile.html",
         context={
-            "client": Client.objects.filter(username=request.user.username).first(),
+            "client": Client.objects.filter(username=request.user.username,trash = False).first(),
         },
     )
 

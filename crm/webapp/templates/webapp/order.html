@@ -1,21 +1,104 @@
 {% extends "webapp/base.html" %}
-
+{% load widget_tweaks %}
+{% load static %}
 {% block header %}
 {% endblock header %}
 {% block page %}Orders{% endblock page %}
 
 {% block content %}
+
 <section class="container grid grid-cols-5 gap-4 my-4">
     <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         View Data
     </a>
+
+
+
+
+    {% if not user.is_superuser and not user.is_staff %}
+ 
+    {% else  %}
     <a href="{% url 'create_order' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Create Data
     </a>
+    {% endif %}
+
+
     <a href="{% url 'download_order' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Download Excel 
     </a>
+    <button type="button" id="filter" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Add Filter 
+    </button>
+
+
+    
+    {% if user.is_superuser  %}
+
+    <a href="{% url 'order_trash' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Trash Items 
+    </a>
+    {% endif %}
 </section>
+
+
+
+<form id="filter_form" method="get" action="{% url 'order_list' %}" class="w-full hidden space-y-6 p-6 rounded-lg shadow-lg bg-white mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Order ID -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_order_id" class="text-lg font-semibold text-gray-700">Order ID</label>
+            {% render_field filter.form.order_id class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter Order ID" %}
+        </div>
+
+        <!-- PO Number -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_po_number" class="text-lg font-semibold text-gray-700">PO Number</label>
+            {% render_field filter.form.po_number class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter PO Number" %}
+        </div>
+
+        <!-- DC Number -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_dc_number" class="text-lg font-semibold text-gray-700">DC Number</label>
+            {% render_field filter.form.dc_number class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter DC Number" %}
+        </div>
+
+        <!-- Client -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_client" class="text-lg font-semibold text-gray-700">Client</label>
+            {% render_field filter.form.client class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+
+        <!-- Source -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_source" class="text-lg font-semibold text-gray-700">Order Source</label>
+            {% render_field filter.form.source class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+
+        <!-- Machine -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_machine" class="text-lg font-semibold text-gray-700">Machine</label>
+            {% render_field filter.form.machine class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+
+        <!-- Status -->
+        <div class="flex flex-col space-y-2">
+            <label for="id_status" class="text-lg font-semibold text-gray-700">Status</label>
+            {% render_field filter.form.status class="bg-amber-100 h-10 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" %}
+        </div>
+
+
+
+    </div>
+
+    <div class="flex flex-col space-y-2">
+        <button type="submit" class="w-full bg-amber-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-green-500">
+            Filter
+        </button>
+    </div>
+</form>
+
+
 <div class="bg-white shadow rounded-lg p-6">
     <table class="min-w-full border-collapse border border-gray-300">
         <thead class="bg-gray-100">
@@ -35,9 +118,33 @@
             {% for order in orders %}
             <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
                 <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+
+
+
+
+                                                                                
+    {% if not user.is_superuser and not user.is_staff %}
+
+
+    <td class="border border-gray-300 px-4 py-2">
+        <a href="#">{{ order.order_id }}</a>
+        </td>
+
+    {% else  %}
+
+
+    <td class="border border-gray-300 px-4 py-2">
+        <a href="{% url 'view_order' id=order.id %}">{{ order.order_id }}</a>
+        </td>
+    {% endif %}
+
+
                 <td class="border border-gray-300 px-4 py-2">
                     <a href="{% url 'view_order' id=order.id %}">{{ order.order_id }}</a>
                     </td>
+
+
+
                 <td class="border border-gray-300 px-4 py-2">{{ order.source }}</td>
                 <td class="border border-gray-300 px-4 py-2">{{ order.po_number }}</td>
                 <td class="border border-gray-300 px-4 py-2">{{ order.client }}</td>
@@ -54,5 +161,14 @@
         </tbody>
     </table>
 </div>
-
+<script>
+    document.getElementById("filter").addEventListener("click", () => {
+        const filterForm = document.getElementById("filter_form");
+        if (filterForm.style.display === "block") {
+            filterForm.style.display = "none";
+        } else {
+            filterForm.style.display = "block";
+        }
+    });
+</script>
 {% endblock content %}

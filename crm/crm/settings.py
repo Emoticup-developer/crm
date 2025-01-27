@@ -42,10 +42,16 @@ INSTALLED_APPS = [
     "api",
     "webapp",
     'addon',
-    "widget_tweaks"
+    "widget_tweaks",
+    "django_filters",
+    
+        "crispy_forms",
+    "crispy_tailwind"
     
 ]
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 
 REST_FRAMEWORK = {
@@ -75,6 +81,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "webapp.middleware.LogsMiddleWare",
 ]
 
 ROOT_URLCONF = "crm.urls"

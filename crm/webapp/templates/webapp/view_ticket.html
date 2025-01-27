@@ -6,7 +6,7 @@
 
 {% block content %}
 <section class="container grid grid-cols-5 gap-4 my-4">
-    <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+    <a href="{% url 'generate_pdf_ticket' id=ticket.id %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Download
     </a>
     <button id="add_file"
@@ -98,18 +98,22 @@
                     <th class="py-2 px-4 bg-gray-100 font-medium">Office</th>
                     <td class="py-2 px-4">{{ ticket.office.company_name|default:"NA" }}</td>
                 </tr>
+
                 <tr class="border-b">
                     <th class="py-2 px-4 bg-gray-100 font-medium">Machine</th>
                     <td class="py-2 px-4">{{ ticket.machine.name|default:"NA" }}</td>
                 </tr>
+
                 <tr class="border-b">
                     <th class="py-2 px-4 bg-gray-100 font-medium">Subject</th>
                     <td class="py-2 px-4">{{ ticket.subject }}</td>
                 </tr>
+
                 <tr class="border-b">
                     <th class="py-2 px-4 bg-gray-100 font-medium">Additional Information</th>
                     <td class="py-2 px-4">{{ ticket.additional_information|default:"None" }}</td>
                 </tr>
+
                 <tr class="border-b">
                     <th class="py-2 px-4 bg-gray-100 font-medium">Photo</th>
                     <td class="py-2 px-4">
@@ -120,6 +124,7 @@
                         {% endif %}
                     </td>
                 </tr>
+
                 <tr class="border-b">
                     <th class="py-2 px-4 bg-gray-100 font-medium">Video</th>
                     <td class="py-2 px-4">
@@ -130,6 +135,7 @@
                         {% endif %}
                     </td>
                 </tr>
+
                 <tr class="border-b">
                     <th class="py-2 px-4 bg-gray-100 font-medium">Created At</th>
                     <td class="py-2 px-4">{{ ticket.created_at|date:"Y-m-d H:i" }}</td>
@@ -138,12 +144,19 @@
                     <th class="py-2 px-4 bg-gray-100 font-medium">Updated At</th>
                     <td class="py-2 px-4">{{ ticket.updated_at|date:"Y-m-d H:i" }}</td>
                 </tr>
+
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium"> Status</th>
+                    <td class="py-2 px-4">{{ ticket.status.status|date:"Y-m-d H:i" }}</td>
+                </tr>
+
                 {% for item in docs %}
                 <tr class="border-b">
                     <th class="py-2 px-4 bg-gray-100 font-medium">{{ item.title }}</th>
                     <td class="py-2 px-4 text-blue-600">  <a href="{{ item.file.url }}"> {{ item.title }}</a></td>
                 </tr>
                 {% endfor %}
+
             </tbody>
         </table>
     </div>
@@ -163,4 +176,7 @@
 
     });
 </script>
+
+
+
 {% endblock content %}

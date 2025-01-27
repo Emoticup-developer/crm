@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  
+<div class="container mx-auto mt-4">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <table class="table-auto w-full text-left border-collapse border border-gray-200">
+            <tbody>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium w-1/3">Order ID</th>
+                    <td class="py-2 px-4">{{ order.order_id }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Order Date</th>
+                    <td class="py-2 px-4">{{ order.order_date|date:"Y-m-d" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Source</th>
+                    <td class="py-2 px-4">{{ order.source.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">PO Number</th>
+                    <td class="py-2 px-4">{{ order.po_number|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Additional Note</th>
+                    <td class="py-2 px-4">{{ order.additional_note|default:"None" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Client</th>
+                    <td class="py-2 px-4">{{ order.client.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Handled By</th>
+                    <td class="py-2 px-4">{{ order.handled_by.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Email/SMS Notification</th>
+                    <td class="py-2 px-4">
+                        {% if order.email_sms_notification %}
+                            <span class="text-green-600 font-bold">Enabled</span>
+                        {% else %}
+                            <span class="text-red-600 font-bold">Disabled</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Office Delivery</th>
+                    <td class="py-2 px-4">{{ order.office_delivery.company_name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Machine</th>
+                    <td class="py-2 px-4">{{ order.machine.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Products</th>
+                    <td class="py-2 px-4">{{ order.products.name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Documents</th>
+                    <td class="py-2 px-4">
+                        {% if order.documents %}
+                            <ul>
+                                {% for doc_key, doc_value in order.documents.items %}
+                                <li><strong>{{ doc_key }}:</strong> {{ doc_value }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="text-gray-500">No Documents</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Created At</th>
+                    <td class="py-2 px-4">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                <tr>
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Updated At</th>
+                    <td class="py-2 px-4">{{ order.updated_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+
+
+
+                
+                {% for item in docs %}
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">{{ item.title }}</th>
+                    <td class="py-2 px-4 text-blue-600">  <a href="{{ item.file.url }}"> {{ item.title }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

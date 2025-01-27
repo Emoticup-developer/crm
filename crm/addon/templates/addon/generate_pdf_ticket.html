@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+   
+
+
+<div class="container mx-auto mt-2">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <table class="table-auto w-full text-left border-collapse border border-gray-200">
+            <tbody>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium w-1/3">Ticket ID</th>
+                    <td class="py-2 px-4">{{ ticket.ticket_id }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Type</th>
+                    <td class="py-2 px-4">{{ ticket.type.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Source</th>
+                    <td class="py-2 px-4">{{ ticket.source.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Client</th>
+                    <td class="py-2 px-4">{{ ticket.client.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Handled By</th>
+                    <td class="py-2 px-4">{{ ticket.handled_by.full_name }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Email/SMS Notification</th>
+                    <td class="py-2 px-4">
+                        {% if ticket.email_sms_notification %}
+                            <span class="text-green-600 font-bold">Enabled</span>
+                        {% else %}
+                            <span class="text-red-600 font-bold">Disabled</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Office</th>
+                    <td class="py-2 px-4">{{ ticket.office.company_name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Machine</th>
+                    <td class="py-2 px-4">{{ ticket.machine.name|default:"NA" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Subject</th>
+                    <td class="py-2 px-4">{{ ticket.subject }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Additional Information</th>
+                    <td class="py-2 px-4">{{ ticket.additional_information|default:"None" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Photo</th>
+                    <td class="py-2 px-4">
+                        {% if ticket.photo %}
+                            <a href="{{ ticket.photo.url }}" class="text-blue-600 underline" target="_blank">View Photo</a>
+                        {% else %}
+                            <span class="text-gray-500">No Photo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Video</th>
+                    <td class="py-2 px-4">
+                        {% if ticket.video %}
+                            <a href="{{ ticket.video.url }}" class="text-blue-600 underline" target="_blank">View Video</a>
+                        {% else %}
+                            <span class="text-gray-500">No Video</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Created At</th>
+                    <td class="py-2 px-4">{{ ticket.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 bg-gray-100 font-medium">Updated At</th>
+                    <td class="py-2 px-4">{{ ticket.updated_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

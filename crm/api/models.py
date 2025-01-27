@@ -1,5 +1,4 @@
 from django.db import models
-from django.db import models
 from django.core.validators import (
     EmailValidator,
     RegexValidator,
@@ -51,13 +50,12 @@ class Company(models.Model):
     pan_number = models.CharField(
         max_length=10, null=True, blank=True
     )  # Permanent Account Number (PAN)
-
     # Communication Address
     comm_address = models.CharField(max_length=250)  # Street Address
-    location = models.CharField(max_length=50, null=True, blank=True)  # Area Name
-    country = models.CharField(max_length=100, null=True, blank=True)  # Country
-    pincode = models.CharField(max_length=6, null=True, blank=True)  # 6-digit pincode
-    state = models.CharField(max_length=100, null=True, blank=True)  # State
+    location = models.CharField(max_length=50, null=True, blank=True) 
+    country = models.CharField(max_length=100, null=True, blank=True)  
+    pincode = models.CharField(max_length=6, null=True, blank=True)  
+    state = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)  # City Name
 
     # Registered Address
@@ -84,6 +82,8 @@ class Company(models.Model):
     enrollment_date = models.DateField(auto_now=True)  # Company Enrollment Date
     
     created_at = models.DateTimeField(auto_now=True)
+    
+    trash = models.BooleanField(default=False,null=True,blank=True)
 
     def __str__(self):
         return self.company_name
@@ -107,9 +107,12 @@ class Location(models.Model):
         blank=True,
         null=True,
     )
+    trash = models.BooleanField(default=False,null=True,blank=True)
 
     def __str__(self):
         return self.title if self.title else "Unnamed Location"
+    
+    
 
     class Meta:
         verbose_name = "Location"
@@ -218,6 +221,8 @@ class Client(models.Model):
     )
     
     created_at = models.DateTimeField(auto_now=True)
+    trash = models.BooleanField(default=False,null=True,blank=True)
+    
 
     def __str__(self):
         return f"{self.full_name} ({self.username})"
@@ -234,6 +239,8 @@ class Product(models.Model):
 
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+    trash = models.BooleanField(default=False,null=True,blank=True)
+    
 
     def __str__(self):
         return self.product_title
@@ -253,10 +260,10 @@ class Machine(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])],
     )
     status = models.BooleanField(default=False,null=True,blank=True)
-    attributes = models.JSONField(
-        default=dict, blank=True ,null=True
-    ) 
+
     created_at = models.DateTimeField(auto_now=True)
+    trash = models.BooleanField(default=False,null=True,blank=True)
+    
 
     def __str__(self):
         return f"{self.machine_name} ({self.machine_id})"
@@ -336,7 +343,15 @@ class Ticket(models.Model):
     video = models.FileField(upload_to="ticket_videos/", blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now=True)
-    status = models.ForeignKey(TicketStatus,on_delete=models.CASCADE,null=True,blank=True)
+    
+    
+    resolution_status = models.BooleanField(blank=False,null=False,default=False)
+    root_cause = models.TextField(blank=True,null=True)
+    observation = models.TextField(blank=True,null=True)
+    
+    status = models.ForeignKey(TicketStatus,on_delete=models.CASCADE,null=True,blank=True,default=1)
+    trash = models.BooleanField(default=False,null=True,blank=True)
+    
     def __str__(self):
         return f"Ticket {self.ticket_id} - {self.subject}"
     
@@ -392,7 +407,7 @@ class OrderSource(models.Model):
 
 
 
-# Main Order Model
+
 class Order(models.Model):
     order_id = models.CharField(max_length=36, unique=True, editable=False, default=uuid.uuid4)   
     order_date = models.DateField(auto_now=True)
@@ -401,7 +416,7 @@ class Order(models.Model):
     dc_number = models.CharField(max_length=100, blank=True, null=True)
     additional_note = models.TextField(blank=True, null=True)
 
-    # Client Information
+
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     handled_by = models.ForeignKey(Client, on_delete=models.CASCADE,related_name="handle")
     email_sms_notification = models.BooleanField(default=True)
@@ -411,14 +426,18 @@ class Order(models.Model):
     # Order Products
     products = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='orders')
 
-    # Files & Documents
-    documents = models.JSONField(blank=True,null=True)
 
+
+    dc_copy = models.FileField(upload_to="dc_copy",blank=True,null=True)
+    
     # Order Status
     created_at = models.DateTimeField(auto_now_add=True)
     on_hold = models.BooleanField(default=False,null=True,blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.ForeignKey(OrderStatus,on_delete=models.CASCADE,null=True,blank=True)
+    
+    trash = models.BooleanField(default=False,null=True,blank=True)
+    
     def __str__(self):
         return f"Order {self.order_id}"
 
@@ -458,6 +477,9 @@ class Rating(models.Model):
     )
     comments = models.TextField(null=True, blank=True, verbose_name="Comments")
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    trash = models.BooleanField(default=False,null=True,blank=True)
+    
 
     def __str__(self):
         return f"Rating for {self.client.name} - {self.rating}"
@@ -497,8 +519,5 @@ class State(models.Model):
     
     def __str__(self):
         return str(self.country)
-    
-    
-    
     
     

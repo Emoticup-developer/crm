@@ -1,5 +1,5 @@
 {% extends "webapp/base.html" %}
-
+{% load static %}
 {% block header %}
 {% endblock header %}
 {% block page %}Products{% endblock page %}
@@ -9,12 +9,32 @@
     <a href="" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         View Data
     </a>
+
+
+
+
+
+    {% if not user.is_superuser and not user.is_staff %}
+ 
+    {% else  %}
     <a href="{% url 'product_create' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Create Data
     </a>
+    {% endif %}
+
+
+
+
     <a href="{% url 'download_product' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
         Download Excel 
     </a>
+
+    {% if user.is_superuser  %}
+
+    <a href="{% url 'product_trash' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Trash Items 
+    </a>
+    {% endif %}
 </section>
 
 <div class="bg-white shadow rounded-lg p-6">
@@ -30,15 +50,41 @@
 
                 <th class="border border-gray-300 px-4 py-2 text-left">status</th>
                 <th class="border border-gray-300 px-4 py-2 text-left">created_at</th>
+                {% if user.is_superuser  %}
+                <th class="border border-gray-300 px-4 py-2 text-left">Trash</th>
+            {% endif %}
             </tr>
         </thead>
         <tbody>
             {% for localization in product %}
             <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
                 <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
-                <td class="border border-gray-300 px-4 py-2">
-                    <a href="{% url 'view_product' id=localization.id %}">{{ localization.product_code }}</a>
-                    </td>
+
+
+                                                                
+    {% if not user.is_superuser and not user.is_staff %}
+
+
+  
+    <td class="border border-gray-300 px-4 py-2">
+        <a href="#">{{ localization.product_code }}</a>
+        </td>
+
+    {% else  %}
+
+
+ 
+ 
+    <td class="border border-gray-300 px-4 py-2">
+        <a href="{% url 'view_product' id=localization.id %}">{{ localization.product_code }}</a>
+        </td>
+    {% endif %}
+
+
+   
+
+
+
                 <td class="border border-gray-300 px-4 py-2">{{ localization.product_title }}</td>
                 <td class="border border-gray-300 px-4 py-2">{{ localization.moq }}</td>
                     
@@ -54,6 +100,10 @@
                 </td>
 
                 <td class="border border-gray-300 px-4 py-2">{{ localization.created_at }}</td>
+
+                {% if user.is_superuser  %}
+                <td class="border border-gray-300 px-4 py-2"><a href="{% url 'delete_product' id=localization.id %}"><img class="w-6 h-6 object-contain" src="{% static 'webapp/trash.png' %}" alt=""></a></td>
+            {% endif %}
      
             </tr>
             {% empty %}
