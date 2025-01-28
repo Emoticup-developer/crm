@@ -7,6 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import JsonResponse
 from django.utils import timezone
 from .models import *
+from .forms import *
 
 
 def generate_tokens(user):
@@ -62,12 +63,16 @@ def model_counts(request):
 
 @api_view(["GET"])
 def ticket_meta(request):
+    office = list(Company.objects.filter(associated_employee=Client.objects.get(username=request.user.username)).values("id", "company_name")) if Client.objects.filter(username=request.user.username).exists() else []
     data = {
         "products": list(Product.objects.values("id", "product_code")),
+        "office":office,
         "machines": list(Machine.objects.values("id", "machine_id")),
         "ticket_types": list(TicketType.objects.values("id", "name")),
         "ticket_sources": list(TicketSource.objects.values("id", "name")),
-        "ticket_priorities": list(TicketPriority.objects.values("id", "name")),
+        "ticket_priorities": list(
+            TicketPriority.objects.values("id", "name", "description")
+        ),
         "companies": list(Company.objects.values("id", "company_name")),
     }
 

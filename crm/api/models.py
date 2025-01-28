@@ -9,110 +9,85 @@ from django.core.validators import (
 import uuid
 
 
-
-
 class OrderStatus(models.Model):
-    status = models.TextField(blank=False,null=False)
+    status = models.TextField(blank=False, null=False)
     created_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return str(self.status)
-    
-    
-    
+
+
 class TicketStatus(models.Model):
-    status = models.TextField(blank=False,null=False)
+    status = models.TextField(blank=False, null=False)
     created_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return str(self.status)
-    
-    
-    
+
+
 class Company(models.Model):
-    company_name = models.CharField(
-        max_length=150, unique=True
-    )  # Company Name (Non-editable)
-    brand_name = models.CharField(
-        max_length=150, null=True, blank=True
-    )  # Brand Name (Non-editable)
-    company_phone = models.CharField(max_length=30)  # Company contact phone number
-    website = models.URLField(
-        max_length=150, null=True, blank=True
-    )  # Company Website address
-    company_email = models.EmailField()  # Company support email address
-    company_mobile_no = models.CharField(
-        max_length=10
-    )  # 10 digits company mobile number
-    gstin = models.CharField(
-        max_length=15, null=True, blank=True
-    )  # Goods and Services Taxpayer Identification Number (GSTIN)
-    pan_number = models.CharField(
-        max_length=10, null=True, blank=True
-    )  # Permanent Account Number (PAN)
-    # Communication Address
-    comm_address = models.CharField(max_length=250)  # Street Address
-    location = models.CharField(max_length=50, null=True, blank=True) 
-    country = models.CharField(max_length=100, null=True, blank=True)  
-    pincode = models.CharField(max_length=6, null=True, blank=True)  
-    state = models.CharField(max_length=100, null=True, blank=True)
-    city = models.CharField(max_length=50, null=True, blank=True)  # City Name
+    company_name = models.CharField(max_length=150, unique=True)
+    brand_name = models.CharField(max_length=150, null=False, blank=False)
+    company_phone = models.CharField(max_length=30, blank=False, null=False)
+    website = models.URLField(max_length=150, null=False, blank=False)
+    company_email = models.EmailField(blank=False, null=False)
+    company_mobile_no = models.CharField(max_length=10, blank=False, null=False)
+    gstin = models.CharField(max_length=15, blank=False, null=False)
+    pan_number = models.CharField(max_length=10, blank=False, null=False)
+    comm_address = models.CharField(
+        max_length=250, blank=False, null=False
+    )  # Street Address
+    location = models.CharField(max_length=50, blank=False, null=False)
+    country = models.CharField(max_length=100, blank=False, null=False)
+    pincode = models.CharField(max_length=6, blank=False, null=False)
+    state = models.CharField(max_length=100, blank=False, null=False)
+    city = models.CharField(max_length=50, blank=False, null=False)  # City Name
+    associated_employee = models.ForeignKey(
+        "Client",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="associated_employee",
+    )
+    reg_address = models.CharField(max_length=750, blank=False, null=False)
 
-    # Registered Address
-    reg_address = models.CharField(
-        max_length=750, null=True, blank=True
-    )  # Main office address
+    contact_person_name = models.CharField(max_length=100, blank=False, null=False)
+    contact_person_mobile = models.CharField(max_length=10, blank=False, null=False)
+    brand_logo = models.ImageField(upload_to="company/logos/", null=True, blank=True)
+    brand_icon = models.ImageField(upload_to="company/icons/", null=True, blank=True)
 
-    # Contact Person
-    contact_person_name = models.CharField(
-        max_length=100, null=True, blank=True
-    )  # Managing contact person name
-    contact_person_mobile = models.CharField(
-        max_length=10, null=True, blank=True
-    )  # Contact person's 10-digit mobile number
+    enrollment_date = models.DateField(auto_now=True)
 
-    # Additional Fields
-    brand_logo = models.ImageField(
-        upload_to="company/logos/", null=True, blank=True
-    )  # Brand Logo (Image)
-    brand_icon = models.ImageField(
-        upload_to="company/icons/", null=True, blank=True
-    )  # Brand Icon (Favicon)
-
-    enrollment_date = models.DateField(auto_now=True)  # Company Enrollment Date
-    
     created_at = models.DateTimeField(auto_now=True)
-    
-    trash = models.BooleanField(default=False,null=True,blank=True)
+
+    trash = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return self.company_name
 
 
 class Location(models.Model):
-    title = models.CharField(max_length=100, blank=True, null=True)
-    map_link = models.CharField(max_length=2000, blank=True, null=True)
-    address_line_1 = models.CharField(max_length=750, blank=True, null=True)
-    address_line_2 = models.CharField(max_length=750, blank=True, null=True)
-    city = models.CharField(max_length=50, blank=True, null=True)
-    state = models.CharField(max_length=50, blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
-    pincode = models.CharField(max_length=6, blank=True, null=True)
-    status = models.BooleanField(null=True,blank=True,default=False)
+    title = models.CharField(max_length=100, blank=False, null=False)
+    map_link = models.CharField(max_length=2000, blank=False, null=False)
+    address_line_1 = models.CharField(max_length=750, blank=False, null=False)
+    address_line_2 = models.CharField(max_length=750, blank=False, null=False)
+    city = models.CharField(max_length=50, blank=False, null=False)
+    state = models.CharField(max_length=50, blank=False, null=False)
+    country = models.CharField(max_length=100, blank=False, null=False)
+    pincode = models.CharField(max_length=6, blank=False, null=False)
+    status = models.BooleanField(null=False, blank=False, default=False)
     created_at = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
         related_name="locations",
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
     )
-    trash = models.BooleanField(default=False,null=True,blank=True)
+    trash = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return self.title if self.title else "Unnamed Location"
-    
-    
 
     class Meta:
         verbose_name = "Location"
@@ -138,19 +113,22 @@ class Client(models.Model):
         max_length=30,
         unique=True,
         default=uuid.uuid4,
-        
         auto_created=True,
     )
     full_name = models.CharField(
         max_length=100,
         verbose_name="Full Name",
         help_text="Client's full name, max 100 characters.",
+        blank=False,
+        null=False,
     )
     gender = models.CharField(
         max_length=6,
         choices=GENDER_CHOICES,
         verbose_name="Gender",
         help_text="Specify the person's gender.",
+        blank=False,
+        null=False,
     )
     date_of_birth = models.DateField(
         null=True,
@@ -181,6 +159,8 @@ class Client(models.Model):
     mobile_no = models.CharField(
         max_length=10,
         unique=True,
+        blank=False,
+        null=False,
         validators=[
             RegexValidator(
                 regex=r"^\d{10}$",
@@ -198,6 +178,8 @@ class Client(models.Model):
         ],
         verbose_name="Username",
         help_text="Unique account username, between 3 and 50 characters.",
+        blank=False,
+        null=False,
     )
     password = models.CharField(
         max_length=30,
@@ -206,6 +188,8 @@ class Client(models.Model):
         ],
         verbose_name="Password",
         help_text="Set a password, between 5 and 30 characters.",
+        blank=False,
+        null=False,
     )
     status = models.CharField(
         max_length=8,
@@ -213,34 +197,34 @@ class Client(models.Model):
         default="Inactive",
         verbose_name="Status",
         help_text="Activate or deactivate the account.",
+        blank=False,
+        null=False,
     )
     notify_via_email_sms = models.BooleanField(
         default=True,
         verbose_name="Email/SMS Notification",
         help_text="Check to send a notification to the client via email/SMS.",
     )
-    
+
     created_at = models.DateTimeField(auto_now=True)
-    trash = models.BooleanField(default=False,null=True,blank=True)
-    
+    trash = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return f"{self.full_name} ({self.username})"
 
 
 class Product(models.Model):
-    product_code = models.CharField(max_length=30, unique=True)
-    product_title = models.CharField(max_length=150)
-    moq = models.PositiveIntegerField(default=1)
-    photo = models.ImageField(upload_to="products/", blank=True, null=True)
-    description = models.TextField(max_length=2000, blank=True, null=True)
+    product_code = models.CharField(max_length=30, unique=True, blank=False, null=False)
+    product_title = models.CharField(max_length=150, null=False, blank=False)
+    moq = models.PositiveIntegerField(default=1, blank=False, null=False)
+    photo = models.ImageField(upload_to="products/", blank=False, null=False)
+    description = models.TextField(max_length=2000, blank=False, null=False)
 
-    status = models.BooleanField(default=False,null=False,blank=False)
+    status = models.BooleanField(default=False, null=False, blank=False)
 
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
-    trash = models.BooleanField(default=False,null=True,blank=True)
-    
+    trash = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return self.product_title
@@ -251,19 +235,23 @@ class Product(models.Model):
 
 
 class Machine(models.Model):
-    machine_id = models.CharField(max_length=30, unique=True)  # Unique machine ID
-    machine_name = models.CharField(max_length=150)  # Machine title
+    machine_id = models.CharField(
+        max_length=30, unique=True, blank=False, null=False
+    )  # Unique machine ID
+    machine_name = models.CharField(
+        max_length=150, blank=False, null=False
+    )  # Machine title
     photo = models.ImageField(
         upload_to="machine_photos/",
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])],
     )
-    status = models.BooleanField(default=False,null=True,blank=True)
+    location = models.TextField(blank=False, null=True, unique=True)
+    status = models.BooleanField(default=False, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now=True)
-    trash = models.BooleanField(default=False,null=True,blank=True)
-    
+    trash = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return f"{self.machine_name} ({self.machine_id})"
@@ -274,21 +262,20 @@ class Machine(models.Model):
 
 
 class machine_attributes(models.Model):
-    associated = models.ForeignKey(Machine,blank=False,on_delete=models.CASCADE,null=False)
-    title = models.TextField(blank=False,null=False)
-    value = models.TextField(blank=False,null=False)
+    associated = models.ForeignKey(
+        Machine, blank=False, on_delete=models.CASCADE, null=False
+    )
+    title = models.TextField(blank=False, null=False)
+    value = models.TextField(blank=False, null=False)
     created_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return self(self.title)
 
 
-
-
-
 class TicketType(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=100)
+    name = models.CharField(max_length=100, blank=False, null=False)
+    description = models.TextField(max_length=100, blank=False, null=False)
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -296,148 +283,156 @@ class TicketType(models.Model):
 
 
 class TicketSource(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=100)
+    name = models.CharField(max_length=100, blank=False)
+    description = models.TextField(max_length=100, null=False)
     created_at = models.DateTimeField(auto_now=True)
-    
 
     def __str__(self):
         return self.name
 
 
 class TicketPriority(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=100)
-    created_at = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100, blank=False)
+    description = models.TextField(max_length=100, blank=False)
+    created_at = models.DateTimeField(auto_now=True, blank=False)
+
     def __str__(self):
         return self.name
 
 
 class Ticket(models.Model):
-    ticket_id = models.CharField(max_length=30, unique=True, editable=False, default=uuid.uuid1,)
+    ticket_id = models.CharField(
+        max_length=30,
+        unique=True,
+        editable=False,
+        default=uuid.uuid1,
+    )
     type = models.ForeignKey(
-        TicketType, on_delete=models.SET_NULL, null=True, blank=True
+        TicketType, on_delete=models.CASCADE, null=False, blank=False
     )
     source = models.ForeignKey(
-        TicketSource, on_delete=models.SET_NULL, null=True, blank=True
+        TicketSource, on_delete=models.CASCADE, null=False, blank=False
     )
     priority = models.ForeignKey(
-        TicketPriority, on_delete=models.SET_NULL, null=True, blank=True
+        TicketPriority, on_delete=models.CASCADE, null=True, blank=True
     )
     client = models.ForeignKey(
-        "Client", on_delete=models.CASCADE, related_name="raised"
+        "Client", on_delete=models.CASCADE, related_name="raised", blank=False
     )
-    handled_by = models.ForeignKey(
-        "Client", on_delete=models.CASCADE, related_name="handle_emp"
-    )
+
     email_sms_notification = models.BooleanField(default=True)
     office = models.ForeignKey(
-        Company, on_delete=models.SET_NULL, null=True, blank=True
+        Company, on_delete=models.SET_NULL, null=True, blank=False
     )
     machine = models.ForeignKey(
-        Machine, on_delete=models.SET_NULL, null=True, blank=True
+        Machine, on_delete=models.SET_NULL, null=True, blank=False
     )
-    subject = models.CharField(max_length=250)
-    additional_information = models.TextField(blank=True, null=True)
+    subject = models.CharField(max_length=250, blank=False)
+    additional_information = models.TextField(blank=False, null=False)
     photo = models.ImageField(upload_to="ticket_photos/", blank=True, null=True)
     video = models.FileField(upload_to="ticket_videos/", blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now=True)
-    
-    
-    resolution_status = models.BooleanField(blank=False,null=False,default=False)
-    root_cause = models.TextField(blank=True,null=True)
-    observation = models.TextField(blank=True,null=True)
-    
-    status = models.ForeignKey(TicketStatus,on_delete=models.CASCADE,null=True,blank=True,default=1)
-    trash = models.BooleanField(default=False,null=True,blank=True)
-    
+
+    resolution_status = models.BooleanField(blank=True, null=True, default=True)
+    root_cause = models.TextField(blank=True, null=True)
+    observation = models.TextField(blank=True, null=True)
+
+    status = models.ForeignKey(
+        TicketStatus, on_delete=models.CASCADE, null=True, blank=True, default=1
+    )
+    trash = models.BooleanField(default=False, null=True, blank=True)
+
     def __str__(self):
         return f"Ticket {self.ticket_id} - {self.subject}"
-    
-
 
     class Meta:
         verbose_name = "Ticket"
         verbose_name_plural = "Tickets"
 
 
-
-
-
 class TicketDocs(models.Model):
-    associated = models.ForeignKey(Ticket,on_delete=models.CASCADE, blank=False,null=False)
-    title = models.TextField(blank=False,null=False)
-    file = models.FileField(blank=False,name=False,upload_to="docs/")
-    created_at = models.DateTimeField(blank=False,auto_now=True)
-    
+    associated = models.ForeignKey(
+        Ticket, on_delete=models.CASCADE, blank=False, null=False
+    )
+    title = models.TextField(blank=False, null=False)
+    file = models.FileField(blank=False, name=False, upload_to="docs/")
+    created_at = models.DateTimeField(blank=False, auto_now=True)
+
     def __str__(self):
         return str(self.title)
+
 
 class TopBarIcon(models.Model):
-    title = models.TextField(blank=False,null=False)
-    icon = models.ImageField(upload_to="icon/",blank=False,null=False)
+    title = models.TextField(blank=False, null=False)
+    icon = models.ImageField(upload_to="icon/", blank=False, null=False)
     date = models.DateTimeField(auto_now=True)
-    link = models.URLField(blank=False,null=False)
-    
+    link = models.URLField(blank=False, null=False)
+
     def __str__(self):
         return str(self.title)
-
 
 
 class SideBarIcon(models.Model):
-    title = models.TextField(blank=False,null=False)
-    icon = models.ImageField(upload_to="icon/",blank=False,null=False)
+    title = models.TextField(blank=False, null=False)
+    icon = models.ImageField(upload_to="icon/", blank=False, null=False)
     date = models.DateTimeField(auto_now=True)
-    link = models.URLField(blank=False,null=False)
-    
+    link = models.URLField(blank=False, null=False)
+
     def __str__(self):
         return str(self.title)
-
-
 
 
 # General Information Models
 class OrderSource(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(null=True,blank=True)
+    name = models.CharField(max_length=100, blank=False)
+    description = models.TextField(null=True, blank=False)
 
     def __str__(self):
         return self.name
 
 
-
-
 class Order(models.Model):
-    order_id = models.CharField(max_length=36, unique=True, editable=False, default=uuid.uuid4)   
-    order_date = models.DateField(auto_now=True)
-    source = models.ForeignKey(OrderSource, on_delete=models.SET_NULL, null=True, blank=True)
-    po_number = models.CharField(max_length=100, blank=True, null=True)
-    dc_number = models.CharField(max_length=100, blank=True, null=True)
-    additional_note = models.TextField(blank=True, null=True)
+    order_id = models.CharField(
+        max_length=36, unique=True, editable=False, default=uuid.uuid4
+    )
+    order_date = models.DateField(auto_now=True, blank=False)
+    source = models.ForeignKey(
+        OrderSource, on_delete=models.SET_NULL, null=True, blank=False
+    )
+    po_number = models.CharField(max_length=100, blank=False, null=False)
+    dc_number = models.CharField(max_length=100, blank=False, null=False)
+    additional_note = models.TextField(blank=True, null=False)
 
-
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    handled_by = models.ForeignKey(Client, on_delete=models.CASCADE,related_name="handle")
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, blank=False)
+    handled_by = models.ForeignKey(
+        Client, on_delete=models.CASCADE, related_name="handle", blank=False
+    )
     email_sms_notification = models.BooleanField(default=True)
-    office_delivery = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True)
-    machine = models.ForeignKey(Machine, on_delete=models.SET_NULL, null=True, blank=True)
+    office_delivery = models.ForeignKey(
+        Company, on_delete=models.SET_NULL, null=True, blank=False
+    )
+    machine = models.ForeignKey(
+        Machine, on_delete=models.SET_NULL, null=True, blank=False
+    )
 
     # Order Products
-    products = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='orders')
+    products = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="orders", blank=False
+    )
 
+    dc_copy = models.FileField(upload_to="dc_copy", blank=True, null=True)
 
-
-    dc_copy = models.FileField(upload_to="dc_copy",blank=True,null=True)
-    
     # Order Status
     created_at = models.DateTimeField(auto_now_add=True)
-    on_hold = models.BooleanField(default=False,null=True,blank=True)
+    on_hold = models.BooleanField(default=False, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.ForeignKey(OrderStatus,on_delete=models.CASCADE,null=True,blank=True)
-    
-    trash = models.BooleanField(default=False,null=True,blank=True)
-    
+    status = models.ForeignKey(
+        OrderStatus, on_delete=models.CASCADE, null=True, blank=False
+    )
+
+    trash = models.BooleanField(default=False, null=True, blank=True)
+
     def __str__(self):
         return f"Order {self.order_id}"
 
@@ -447,20 +442,21 @@ class Order(models.Model):
 
 
 class OrderDocs(models.Model):
-    associated = models.ForeignKey(Order,on_delete=models.CASCADE, blank=False,null=False)
-    title = models.TextField(blank=False,null=False)
-    file = models.FileField(blank=False,name=False,upload_to="docs/")
-    created_at = models.DateTimeField(blank=False,auto_now=True)
-    
+    associated = models.ForeignKey(
+        Order, on_delete=models.CASCADE, blank=False, null=False
+    )
+    title = models.TextField(blank=False, null=False)
+    file = models.FileField(blank=False, name=False, upload_to="docs/")
+    created_at = models.DateTimeField(blank=False, auto_now=True)
+
     def __str__(self):
         return str(self.title)
-
 
 
 class Localization(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=250, blank=True, null=True)
-    image = models.ImageField(upload_to='item_images/', blank=True, null=True)
+    image = models.ImageField(upload_to="item_images/", blank=True, null=True)
     status = models.BooleanField(max_length=10, default=False)
     created_at = models.DateTimeField(auto_now=True)
 
@@ -468,30 +464,28 @@ class Localization(models.Model):
         return self.name
 
 
-
 class Rating(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='ratings')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="ratings")
     rating = models.PositiveIntegerField(
         choices=[(i, str(i)) for i in range(1, 6)],  # Ratings from 1 to 5
-        verbose_name="Rating (1-5)"
+        verbose_name="Rating (1-5)",
     )
     comments = models.TextField(null=True, blank=True, verbose_name="Comments")
     created_at = models.DateTimeField(auto_now_add=True)
-    
-    trash = models.BooleanField(default=False,null=True,blank=True)
-    
+
+    trash = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return f"Rating for {self.client.name} - {self.rating}"
 
     class Meta:
-        ordering = ['-created_at']
-        
-        
+        ordering = ["-created_at"]
+
+
 class Authorize(models.Model):
-    key = models.TextField(blank=False, null=False, unique=True)  
-    date = models.DateTimeField(auto_now_add=True) 
-    request = models.TextField(blank=False,null=False)  
+    key = models.TextField(blank=False, null=False, unique=True)
+    date = models.DateTimeField(auto_now_add=True)
+    request = models.TextField(blank=False, null=False)
 
     def __str__(self):
         return str(self.key)
@@ -501,23 +495,30 @@ class Authorize(models.Model):
         try:
             return cls.objects.get(key=keys)
         except cls.DoesNotExist:
-            return None  
-        
-        
+            return None
+
+
 class Country(models.Model):
-    country = models.TextField(blank=False,null=False)
-    created_at = models.DateTimeField(blank=False,null=False,auto_now=True)
-    
+    country = models.TextField(blank=False, null=False)
+    created_at = models.DateTimeField(blank=False, null=False, auto_now=True)
+
     def __str__(self):
         return str(self.country)
 
 
 class State(models.Model):
-    country = models.ForeignKey(Country,on_delete=models.CASCADE)
-    state = models.TextField(blank=False,null=False)
-    created_at = models.DateTimeField(blank=False,null=False,auto_now=True)
-    
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    state = models.TextField(blank=False, null=False)
+    created_at = models.DateTimeField(blank=False, null=False, auto_now=True)
+
     def __str__(self):
         return str(self.country)
-    
-    
+
+
+class CompanyMachineTable(models.Model):
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, blank=False)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=False)
+    used_by = models.ForeignKey(Client, on_delete=models.CASCADE, blank=False)
+
+    def __str__(self):
+        return str(self.company)

@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from api.models import *
 from .models import LogsAndHistory
+from django.shortcuts import redirect
 
 
 class DeviceAuthorizationMiddleware:
@@ -11,7 +12,7 @@ class DeviceAuthorizationMiddleware:
         if (
             request.path.startswith("/admin")
             or request.path.startswith("/api")
-            or request.path.startswith("/authorize")
+            or request.path.startswith("/authorize") or  request.path.startswith("/media"),
         ):
             return self.get_response(request)
 
@@ -31,9 +32,13 @@ class LogsMiddleWare:
         if (
             request.path.startswith("/admin")
             or request.path.startswith("/api")
-            or request.path.startswith("/authorize")
+            or request.path.startswith("/authorize") or  request.path.startswith("/media")
         ):
             return self.get_response(request)
+        
+        if not request.user.is_authenticated:
+            return self.get_response(request)
+
         ip = self.get_client_ip(request)
         device = request.META.get("HTTP_USER_AGENT", "")
         method = request.method

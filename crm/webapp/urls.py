@@ -73,6 +73,8 @@ urlpatterns = [
     path("profile", profile, name="profile"),
     path("password_reset", password_reset, name="password_reset"),
     path("authorize", authorize, name="authorize"),
+    path("company_assign", company_assign, name="company_assign"),
+    path("company_assign_view", company_assign_view, name="company_assign_view"),
     
     
 ]

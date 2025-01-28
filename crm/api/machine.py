@@ -3,13 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Machine
 from .serializers import MachineSerializer
-
+from .models import *
 from rest_framework.decorators import api_view, permission_classes
 
 
-
 @api_view(["GET", "POST", "PUT", "DELETE"])
-# @permission_classes([IsAuthenticated])  
+# @permission_classes([IsAuthenticated])
 def machine_api(request, pk=None):
     if request.method == "GET":
         if pk:
@@ -81,4 +80,10 @@ def machine_api(request, pk=None):
         )
 
 
-
+@api_view(["GET"])
+def get_user_machine(request, username):
+    queryset = Machine.objects.filter(
+    id__in=CompanyMachineTable.objects.filter(used_by__username=username).values_list('machine_id', flat=True)
+    )
+    serializer = MachineSerializer(queryset, many=True)
+    return Response({"data": serializer.data}, status=status.HTTP_200_OK)

@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import login_view, model_counts, ticket_meta
+from .views import *
+from .client import *
 from .client import client_api, reset_password
 from .product import product_api
-from .machine import machine_api
+from .machine import machine_api,get_user_machine
 from .company import company_api
 from .location import location_api
 from .tiket import ticket_api
@@ -14,6 +15,7 @@ urlpatterns = [
     path("client/", client_api, name="client_create"),
     path("client/<int:pk>/", client_api, name="client_update_delete"),
     path("client/password/<int:pk>/", reset_password, name="reset_password"),
+    path("get_user", get_user, name="get_user"),
     # product
     path("product/", product_api, name="product_api"),
     path("product/<int:pk>/", product_api, name="product_api_del"),
@@ -39,4 +41,5 @@ urlpatterns = [
     path("model_counts/", model_counts, name="model_counts"),
     # ticket_meta
     path("ticket_meta", ticket_meta, name="ticket_meta"),
+    path("get_user_machine/<username>", get_user_machine, name="get_user_machine"),
 ]

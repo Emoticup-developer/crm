@@ -1,0 +1,84 @@
+
+{% extends "webapp/base.html" %}
+{% load static %}
+{% block header %}
+{% endblock header %}
+
+{% block page %}All Machine Assigned {% endblock page %}
+
+{% block content %}
+<section class="container grid grid-cols-5 gap-4 my-4">
+    {% if not user.is_superuser and not user.is_staff %}
+ 
+    {% else  %}
+    <a href="{% url 'company_assign' %}" class="text-center  bg-gray-400 text-black py-2 px-4 rounded-lg hover:bg-amber-400 transition">
+        Create Data
+    </a>
+    {% endif %}
+</section>
+<div class="bg-white shadow rounded-lg p-6">
+    <table class="min-w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Machine</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Company</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Used By</th>
+
+                {% if user.is_superuser %}
+                <th class="border border-gray-300 px-4 py-2 text-left">Trash</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in company_machine_records %}
+            <tr class="even:bg-gray-50 hover:bg-gray-100 transition">
+                <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+
+                <!-- Machine Field -->
+                <td class="border border-gray-300 px-4 py-2">
+                    {% if not user.is_superuser and not user.is_staff %}
+                        <a href="#">{{ record.machine }}</a>
+                    {% else %}
+                        <a href="{% url 'view_machine' id=record.machine.id %}">{{ record.machine }}</a>
+                    {% endif %}
+                </td>
+
+                <!-- Company Field -->
+                <td class="border border-gray-300 px-4 py-2">{{ record.company }}</td>
+
+                <!-- Used By Field -->
+                <td class="border border-gray-300 px-4 py-2">{{ record.used_by }}</td>
+
+                <!-- Trash for Superuser -->
+                {% if user.is_superuser %}
+                <td class="border border-gray-300 px-4 py-2">
+                    <a href="#">
+                        <img class="w-6 h-6 object-contain" src="{% static 'webapp/trash.png' %}" alt="Delete">
+                    </a>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-gray-500 py-4">No data available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+

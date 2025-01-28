@@ -152,7 +152,7 @@ def machine_create(request):
             messages.error(request, f"{form.errors}")
     else:
         form = MachineForm()
-    return render(request, "webapp/createmachine.html", {"form": form})
+    return render(request, "webapp/createmachine.html", {"form": form,"location":Location.objects.all()})
 
 
 @login_required
@@ -511,3 +511,28 @@ def authorize(request):
         )
         return responce
     return render(request, "webapp/authorize.html")
+
+
+
+
+@login_required
+def company_assign(request):
+    if request.method == 'POST':
+        form = CompanyMachineTableForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Record added successfully!")
+            return redirect('company_assign_view')
+    else:
+        form = CompanyMachineTableForm()
+    return render(request, 'webapp/company_asign.html', {'form': form})
+
+
+
+@login_required
+def company_assign_view(request):
+    return render(
+        request,
+        "webapp/company_assign_view.html",
+        context={"company_machine_records": CompanyMachineTable.objects.all()},
+    )

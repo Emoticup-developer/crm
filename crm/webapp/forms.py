@@ -83,3 +83,22 @@ class MachineAttributesForm(forms.ModelForm):
         model = machine_attributes
         fields = "__all__"
 
+
+
+
+
+
+
+class CompanyMachineTableForm(forms.ModelForm):
+    class Meta:
+        model = CompanyMachineTable
+        fields = ['machine', 'company', 'used_by']
+        widgets = {
+            'machine': forms.Select(attrs={'class': 'form-control'}),
+            'company': forms.Select(attrs={'class': 'form-control'}),
+            'used_by': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+
+

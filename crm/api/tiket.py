@@ -27,13 +27,19 @@ def ticket_api(request, pk=None):
             return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == "POST":
-        serializer = TicketSerializer(data=request.data)
+        print(request.POST)
+        try:
+            serializer = TicketSerializer(data=request.data)
+        except Exception as ex:
+            print(ex)
         if serializer.is_valid():
             serializer.save()
             return Response(
                 {"message": "Ticket created successfully", "data": serializer.data},
                 status=status.HTTP_201_CREATED,
             )
+        else:
+            print(serializer.errors)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
